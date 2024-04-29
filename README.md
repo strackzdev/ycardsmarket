@@ -93,7 +93,7 @@ The repository is organized into four main folders:
 1. Clone the repository:
 
 ```bash
-git clone git@github.com:strackzdev/ycardsmarket.git
+git clone git@github.com:strackzdev/back.git
 ```
 
 2. Run the docker compose application (Extra documentation under development):
