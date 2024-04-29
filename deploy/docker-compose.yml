@@ -6,10 +6,13 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
+    networks:
+      ycardsmarket_network:
+        aliases:
+          - ycardsmarket-front.local
 
   # BACKEND
   back:
-    hostname: ycardsmarket-back.local
     build:
       context: ../back
       dockerfile: Dockerfile
@@ -18,10 +21,13 @@ services:
     restart: on-failure
     ports:
       - "1000:8000"
+    networks:
+      ycardsmarket_network:
+        aliases:
+          - ycardsmarket-back.local
 
   # DATABASE
   database:
-    hostname: ycardsmarket-database.local
     image: postgres:latest
     environment:
       POSTGRES_DB: postgres
@@ -31,3 +37,11 @@ services:
       - "5432:5432"
     volumes:
       - /usr/local/postgresql/ycardsmarket:/var/lib/postgresql/data
+    networks:
+      ycardsmarket_network:
+        aliases:
+          - ycardsmarket-database.local
+
+networks:
+  ycardsmarket_network:
+    driver: bridge
