@@ -1,0 +1,19 @@
+{
+  "name": "ycardsmarket",
+  "version": "1.0.0",
+  "description": "School project of a TGC cards market",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/strackzdev/ycardsmarket.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/strackzdev/ycardsmarket/issues"
+  },
+  "homepage": "https://github.com/strackzdev/ycardsmarket#readme"
+}
