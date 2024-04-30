@@ -4,7 +4,8 @@ WORKDIR /app
 COPY requirements.txt .
 # Install dependencies globally in the builder stage
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt && \
+    apt-get install libpq-dev
 
 # Stage 2: Application stage to run the Django app
 FROM python:3.10-slim
