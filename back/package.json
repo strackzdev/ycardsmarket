@@ -1,0 +1,13 @@
+{
+  "name": "ycardsmarketback",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "python3 manage.py runserver",
+    "makemigrations": "python3 manage.py makemigrations",
+    "migrate": "python3 manage.py migrate"
+  },
+  "author": "",
+  "license": "ISC"
+}
