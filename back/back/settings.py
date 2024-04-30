@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-kd4$mbuw*-a(ay-(*#!evj13de=1b4y52+a3xrkj35zr$tvdlb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'ycardsmarket.onrender.com'
+]
 
 
 # Application definition
