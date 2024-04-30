@@ -1,0 +1,6 @@
+### GET BY ID
+GET http://{{ url }}/api/v1/lorcana/200/seasons/1
+
+### CREATE
+POST http://{{ url }}/api/v1/lorcana/
+Content-Type: application/json
