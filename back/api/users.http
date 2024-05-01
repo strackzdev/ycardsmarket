@@ -1,0 +1,24 @@
+### CREATE
+POST http://{{ url }}/api/v1/users/register/
+Content-Type: application/json
+
+{
+  "username": "test",
+  "email": "test@email.com",
+  "password": "testpass123",
+  "password2": "testpass123",
+  "bio": "Testing profile biography"
+}
+
+### LOGIN
+POST http://{{ url }}/api/v1/users/auth/
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "testpass123"
+}
+
+### GET PROFILE
+GET http://{{ url }}/api/v1/users/profile/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NTkyNTM1LCJpYXQiOjE3MTQ1ODE3MzUsImp0aSI6IjIwMGE2MzMwZDkwNzQzOWQ5MDJmMGNiZjAyNTNjYjI1IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QGVtYWlsLmNvbSJ9.1mHA1HUeKhHzf6g2XQH3_ChhAu0xgfSfprP6LYFGZSM
