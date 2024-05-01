@@ -26,9 +26,3 @@ class LorcanaCard(models.Model):
     classifications = models.TextField(null=True)
     abilities = models.TextField(null=True)
     card_variants = models.TextField(null=True)
-
-
-class LorcanaCardSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = LorcanaCard
-        fields = '__all__'
