@@ -16,7 +16,7 @@ from .serialisers import LorcanaCardSerializer, LorcanaCollectionSerializer
 @api_view(['GET'])
 def get(request):
     lorcana_cards = LorcanaCard.objects.all()
-    serializer = LorcanaCardSerializer(lorcana_cards)
+    serializer = LorcanaCardSerializer(lorcana_cards, many=True)
     return Response(serializer.data)
 
 
