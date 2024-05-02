@@ -1,9 +1,9 @@
 from django.db import models
-from rest_framework import serializers
+
+from users.models import CustomUser
 
 
 # Create your models here.
-
 class LorcanaCard(models.Model):
     set_id = models.TextField(null=True)
     set_name = models.TextField(null=True)
@@ -26,3 +26,10 @@ class LorcanaCard(models.Model):
     classifications = models.TextField(null=True)
     abilities = models.TextField(null=True)
     card_variants = models.TextField(null=True)
+
+
+class LorcanaCollection(models.Model):
+    name = models.TextField(null=True)
+    is_public = models.BooleanField(null=False, default=False)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    cards = models.ManyToManyField(LorcanaCard, blank=True)
