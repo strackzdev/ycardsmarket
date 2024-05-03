@@ -1,6 +1,8 @@
 <template>
-  <CardLorcanaComponent v-for="card in cardsDisplayed" :key="card.id" :card=card />
-  <InfiniteScrollingComponent @intersect="intersected"/>
+  <div class="max-w-96 px-4 md:max-w-full m-auto grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    <CardLorcanaComponent v-for="card in cardsDisplayed" :key="card.id" :card=card />
+    <InfiniteScrollingComponent @intersect="intersected"/>
+  </div>
 </template>
 
 <script setup lang="ts">
