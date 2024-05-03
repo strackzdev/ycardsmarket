@@ -97,6 +97,7 @@ export default {
   transform: rotate(90deg);
   pointer-events: none; /* Ensure the text does not interfere with clicks */
   background-color: black;
+  border-radius: 10px;
 }
 
 .card:last-child {
