@@ -18,7 +18,7 @@ export default {
         { label: 'Deck', component: 'component1', imageUrl: 'src/assets/images/yugiohNavCard.png' },
         { label: 'Trading', component: 'component2', imageUrl: 'src/assets/images/pokemonNavCard.png' },
         { label: 'Cards', component: 'component3', imageUrl: 'src/assets/images/lorcanaNavCard.png' },
-        { label: 'Home', component: 'component4', imageUrl: 'https://cf.geekdo-images.com/An6FTVYqLkDcUp-kFJjdRA__imagepage/img/sxlgAdaO8KIEDB1ZnfcuBfpc7zw=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7940425.png' }
+        { label: 'Home', component: 'component4', imageUrl: 'src/assets/images/magicNavCard.png' }
       ]
     };
   },
@@ -29,10 +29,10 @@ export default {
           this.$router.push({ path: '/decks' });
           break;
         case 'component2':
-          window.location.href = '/home';
+          this.$router.push({ path: '/' });
           break;
         case 'component3':
-          window.location.href = 'component3.html';
+          this.$router.push({ path: '/' });
           break;
         case 'component4':
           this.$router.push({ path: '/home' });
@@ -97,6 +97,7 @@ export default {
   transform: rotate(90deg);
   pointer-events: none; /* Ensure the text does not interfere with clicks */
   background-color: black;
+  border-radius: 10px;
 }
 
 .card:last-child {
