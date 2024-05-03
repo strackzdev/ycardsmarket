@@ -32,7 +32,6 @@ import LoginButton from '@/components/LoginButton.vue'
           </button>
         </div>
       </div>
-      <div class="col-span-2">07</div>
     </div>
   </div>
 
