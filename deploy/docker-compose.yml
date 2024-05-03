@@ -1,0 +1,33 @@
+services:
+  # WEBAPP
+  webapp:
+    build:
+      context: ../front
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+
+  # BACKEND
+  back:
+    hostname: ycardsmarket-back.local
+    build:
+      context: ../back
+      dockerfile: Dockerfile
+    depends_on:
+      - database
+    restart: on-failure
+    ports:
+      - "1000:8000"
+
+  # DATABASE
+  database:
+    hostname: ycardsmarket-database.local
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - /usr/local/postgresql/ycardsmarket:/var/lib/postgresql/data
