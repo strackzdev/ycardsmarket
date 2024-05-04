@@ -28,7 +28,6 @@ onMounted(() => {
 // Functions
 function doRotation() {
   if (props.card.type === CardLorcanaType.LOCATION) {
-    console.log(props.card.type)
     isRotated.value = !isRotated.value
   }
 }
