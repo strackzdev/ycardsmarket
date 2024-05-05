@@ -2,10 +2,14 @@
 GET http://{{ url }}/api/v1/lorcana/200/seasons/1
 
 ### CREATE LORCANA COLLECTION (SECURED)
-GET http://{{ url }}/api/v1/lorcana/collections
+POST http://{{ url }}/api/v1/lorcana/collections
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NjQ1MjMzLCJpYXQiOjE3MTQ2MzQ0MzMsImp0aSI6ImZhNDc5ODc2MTVlYzQyNjFiZTI4MzJmZmU2NjYyMTg5IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QGVtYWlsLmNvbSJ9.TXAl9lNdgzyLzk5AMZyFti3j6Mu3yxh6NuMf6qi7yO0
+Authorization: Bearer {{ auth_jwt_token }}
 
+{{
+    // Set the token as a header
+    request.addHeader("Authorization", "Bearer {{ YCARDSMARKET_JWT_TOKEN= }}");
+}}
 
 {
   "name": "Aggro/Control deck v1",
@@ -14,11 +18,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 ### GET BY ID (SECURED)
 GET http://{{ url }}/api/v1/lorcana/collections/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NjQ1MjMzLCJpYXQiOjE3MTQ2MzQ0MzMsImp0aSI6ImZhNDc5ODc2MTVlYzQyNjFiZTI4MzJmZmU2NjYyMTg5IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QGVtYWlsLmNvbSJ9.TXAl9lNdgzyLzk5AMZyFti3j6Mu3yxh6NuMf6qi7yO0
+Authorization: Bearer {{ auth_jwt_token }}
 
 ### ADD LORCANA CARDS TO COLLECTION (SECURED)
 POST http://{{ url }}/api/v1/lorcana/collections/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NjQ1MjMzLCJpYXQiOjE3MTQ2MzQ0MzMsImp0aSI6ImZhNDc5ODc2MTVlYzQyNjFiZTI4MzJmZmU2NjYyMTg5IiwidXNlcl9pZCI6MSwidXNlcm5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QGVtYWlsLmNvbSJ9.TXAl9lNdgzyLzk5AMZyFti3j6Mu3yxh6NuMf6qi7yO0
+Authorization: Bearer {{ auth_jwt_token }}
 
 [1, 5, 20, 300]
