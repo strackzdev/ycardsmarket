@@ -6,11 +6,6 @@ POST http://{{ url }}/api/v1/lorcana/collections
 Content-Type: application/json
 Authorization: Bearer {{ auth_jwt_token }}
 
-{{
-    // Set the token as a header
-    request.addHeader("Authorization", "Bearer {{ YCARDSMARKET_JWT_TOKEN= }}");
-}}
-
 {
   "name": "Aggro/Control deck v1",
   "is_public": false
