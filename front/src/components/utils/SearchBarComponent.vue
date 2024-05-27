@@ -15,23 +15,20 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-
 // Refs
 const searchInput = ref('');
 
-
 // Emits
 const emit = defineEmits<{
-    search: [value: string]
+    search: [{ filterName: string, value: string }]
 }>()
 
-//// Functions
+// Functions
 function updateSearch(e: Event) {
     e.preventDefault()
     const target = e.currentTarget as HTMLInputElement;
 
     searchInput.value = target.value
-    emit('search', target.value)
+    emit('search', { filterName : 'search', value : target.value })
 }
-
 </script>
