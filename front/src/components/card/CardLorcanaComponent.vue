@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col justify-center">
     <img
-      class="rounded-xl w-fit"
+      class="rounded-2xl w-fit"
       :class="[isRotated ? 'rotate-90 aspect-square scale-x-75' : '']"
       :src="props.card.image_url"
       alt=""

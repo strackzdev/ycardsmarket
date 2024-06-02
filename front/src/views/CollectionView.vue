@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8">
-    <div class="px-4 md:max-w-full m-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+    <div class="px-4 md:max-w-full m-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-16">
       <CardLorcanaComponent v-for="card in cardsDisplayed" :key="card.id" :card=card />
       <InfiniteScrollingComponent @intersect="intersected"/>
     </div>
