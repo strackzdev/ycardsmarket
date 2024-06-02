@@ -1,11 +1,15 @@
 <template>
   <div class="md:px-8 lg:px-24 py-8">
-    <SearchBarComponent @search="getSearchValue" />
-    <FilterDropdownComponent filter-name="set_name" :filter-by="CardLorcanaSet" @filter="getFilterValue"/>
-    <FilterDropdownComponent filter-name="type" :filter-by="CardLorcanaType" @filter="getFilterValue"/>
-    <FilterDropdownComponent filter-name="rarity" :filter-by="CardLorcanaRarity" @filter="getFilterValue"/>
+    <h1 class="mb-10 navy-blue font-bold text-5xl">OVERALL CARDS - GAME NAME</h1>
+
+    <SearchBarComponent class="mb-5" @search="getSearchValue" />
+    <div class="flex">
+      <FilterDropdownComponent class="mr-2" filter-name="set_name" :filter-by="CardLorcanaSet" @filter="getFilterValue"/>
+      <FilterDropdownComponent class="mr-2" filter-name="type" :filter-by="CardLorcanaType" @filter="getFilterValue"/>
+      <FilterDropdownComponent class="mr-2" filter-name="rarity" :filter-by="CardLorcanaRarity" @filter="getFilterValue"/>
+    </div>
   </div>
-  <div class="h-full navy-blue-bg md:px-8 lg:px-24 py-8">
+  <div class="min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8">
     <div class="px-4 md:max-w-full m-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
       <CardLorcanaComponent v-for="card in cardsDisplayed" :key="card.id" :card=card />
       <InfiniteScrollingComponent @intersect="intersected"/>

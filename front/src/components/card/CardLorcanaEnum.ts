@@ -19,3 +19,9 @@ export enum CardLorcanaSet {
     THE_FIRST_CHAPTER="The First Chapter",
     RISE_OF_THE_FLOODBORN="Rise of the Floodborn"
 }
+
+export enum CardLorcanaProperty {
+    TYPE="TYPE",
+    RARITY="RARITY",
+    SET_NAME="SET"
+}

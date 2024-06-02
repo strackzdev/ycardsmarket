@@ -9,3 +9,27 @@ body {
 .navy-blue-bg {
   background-color: #1A1E3E;
 }
+
+.navy-blue-border {
+  border-color: #1A1E3E;
+}
+
+.barbel-blue-border {
+  border-color: #555C93;
+}
+
+select:focus {
+  border-color: #1A1E3E;
+  border-width: 3px;
+}
+
+select {
+  background: url("data:image/svg+xml,%3Csvg height='32px' width='32px' viewBox='0 0 16 16' fill='none' stroke='%231A1E3E' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6l4 4 4-4' fill='none'/%3E%3C/svg%3E") no-repeat;
+  background-position: calc(100% - 0.75rem) center !important;
+  -moz-appearance:none !important;
+  -webkit-appearance: none !important; 
+  appearance: none !important;
+  cursor: pointer;
+  width: auto;
+  border-radius: 9999px;
+}
