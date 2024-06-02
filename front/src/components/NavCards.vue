@@ -32,7 +32,7 @@ export default {
           this.$router.push({ path: '/' });
           break;
         case 'component3':
-          this.$router.push({ path: '/' });
+          this.$router.push({ path: '/collection' });
           break;
         case 'component4':
           this.$router.push({ path: '/home' });
