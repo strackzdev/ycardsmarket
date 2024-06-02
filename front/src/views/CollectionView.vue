@@ -1,12 +1,12 @@
 <template>
   <div class="md:px-8 lg:px-24 py-8">
-    <h1 class="mb-10 navy-blue font-bold text-5xl">OVERALL CARDS - GAME NAME</h1>
+    <h1 class="mb-10 navy-blue font-bold text-center md:text-left text-xl md:text-5xl">OVERALL CARDS - GAME NAME</h1>
 
-    <SearchBarComponent class="mb-5" @search="getSearchValue" />
-    <div class="flex">
-      <FilterDropdownComponent class="mr-2" filter-name="set_name" :filter-by="CardLorcanaSet" @filter="getFilterValue"/>
-      <FilterDropdownComponent class="mr-2" filter-name="type" :filter-by="CardLorcanaType" @filter="getFilterValue"/>
-      <FilterDropdownComponent class="mr-2" filter-name="rarity" :filter-by="CardLorcanaRarity" @filter="getFilterValue"/>
+    <SearchBarComponent class="mb-5 px-2 md:px-0" @search="getSearchValue" />
+    <div class="flex flex-col md:flex-row">
+      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="set_name" :filter-by="CardLorcanaSet" @filter="getFilterValue"/>
+      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="type" :filter-by="CardLorcanaType" @filter="getFilterValue"/>
+      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="rarity" :filter-by="CardLorcanaRarity" @filter="getFilterValue"/>
     </div>
   </div>
   <div class="min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8">
