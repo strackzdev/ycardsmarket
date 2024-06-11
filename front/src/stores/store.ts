@@ -1,25 +1,20 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
+import type { Card } from '@/utils/types/card'
+import { getAllCards } from '@/utils/requests/card'
 
 export const useMainStore = defineStore('main', () => {
   const count = ref(0)
-  const name = ref('Pinia Store')
-
   const doubleCount = computed(() => count.value * 2)
 
-  function increment() {
-    count.value++
-  }
+  const storeCards = ref<Card[]>([]);
 
-  function setName(newName: string) {
-    name.value = newName
+  async function fetchAllCards() {
+    storeCards.value = await getAllCards();
   }
 
   return {
-    count,
-    name,
-    doubleCount,
-    increment,
-    setName
+    storeCards,
+    fetchAllCards
   }
 })

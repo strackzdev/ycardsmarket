@@ -11,57 +11,48 @@
   </div>
   <div class="min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8">
     <div class="px-4 md:max-w-full m-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-16">
-      <CardLorcanaComponent v-for="card in cardsDisplayed" :key="card.id" :card=card />
+      <CardLorcanaComponent v-for="card in storeCards" :key="card.id" :card=card />
       <InfiniteScrollingComponent @intersect="intersected"/>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { CardLorcana } from '@/components/card/CardInterface';
+import { onMounted, ref, type Ref, toRefs } from 'vue'
+import type { Card } from '@/utils/types/card'
+import type { Filter } from '@/utils/types/filter'
+
+import { useMainStore } from '@/stores/store'
 import CardLorcanaComponent from '@/components/card/CardLorcanaComponent.vue';
 import InfiniteScrollingComponent from '@/components/utils/InfiniteScrollingComponent.vue';
 import SearchBarComponent from '@/components/utils/SearchBarComponent.vue';
 import FilterDropdownComponent from '@/components/utils/FilterDropdownComponent.vue';
-import axios from 'axios';
-import { onMounted, ref, type Ref } from 'vue';
 import { CardLorcanaType, CardLorcanaSet, CardLorcanaRarity } from '@/components/card/CardLorcanaEnum';
 
-// Type
-export interface Filter {
-  filterName: string,
-  value: string
-}
-
-// Consts
 const quantityOfCardToAdd = 20;
 
-// Variables
-let cards: CardLorcana[] = [];
-
 // Refs
-const cardsDisplayed: Ref<CardLorcana[]> = ref([]);
-const cardsRemainingToDisplay: Ref<CardLorcana[]> = ref([]);
+const cardsDisplayed: Ref<Card[]> = ref([]);
+const cardsRemainingToDisplay: Ref<Card[]> = ref([]);
 
 const searchValue: Ref<string | undefined> = ref();
 const filterSet: Ref<string | undefined> = ref();
 const filterType: Ref<string | undefined> = ref();
 const filterRarity: Ref<string | undefined> = ref();
 
-// Hooks
-onMounted(async() => {
-  cards.push(...await getCards());
-  cardsRemainingToDisplay.value = [...cards]
+// Store
+const mainStore = useMainStore();
+const { storeCards } = toRefs(mainStore)
+const fetchAllCards = mainStore.fetchAllCards
 
+
+onMounted(()=> {
+  fetchAllCards()
+  cardsRemainingToDisplay.value = [...storeCards.value]
   getCardsByQuantity(quantityOfCardToAdd);
 })
 
-// Functions
-async function getCards(): Promise<CardLorcana[]> {
-  return (await axios.get('https://ycardsmarket.onrender.com/api/v1/lorcana/?format=json')).data;
-}
-
-function getCardsByQuantity(quantity: number): void { 
+function getCardsByQuantity(quantity: number): void {
   cardsDisplayed.value.push(...cardsRemainingToDisplay.value.splice(0, quantity));
 }
 
@@ -79,7 +70,7 @@ function getSearchValue(filter: Filter) {
   refreshCards();
 }
 
-function getFilterValue(filter: Filter) { 
+function getFilterValue(filter: Filter) {
   switch(filter.filterName) {
     case 'set_name':
     filterSet.value = filter.value;
@@ -96,7 +87,7 @@ function getFilterValue(filter: Filter) {
 }
 
 function refreshCards(): void {
-  let cardsCopy: CardLorcana[]  = [...cards]
+  let cardsCopy: Card[]  = [...storeCards.value];
 
   if (searchValue.value) {
     cardsCopy = searchByName(cardsCopy, searchValue.value)
@@ -111,23 +102,21 @@ function refreshCards(): void {
   if (filterRarity.value) {
     cardsCopy = filterBy(cardsCopy, 'rarity', filterRarity.value)
   }
-  
-  cardsRemainingToDisplay.value = cardsCopy;
 
+  cardsRemainingToDisplay.value = cardsCopy;
   resetCardsDisplayed()
   getCardsByQuantity(quantityOfCardToAdd)
-
 }
 
-function searchByName(cards: CardLorcana[], value: string): CardLorcana[] {
+function searchByName(cards: Card[], value: string): Card[] {
   return cards.filter(card => card.name.toLowerCase().includes(value.toLowerCase()))
 }
 
-function filterBy(cards: CardLorcana[], filterName: string, value: string) {
+function filterBy(cards: Card[], filterName: string, value: string) {
   return cards.filter(card => callback(card, filterName, value))
 }
 
-function callback(card: CardLorcana, filterName: string, value: string) {
-  return (card[filterName as keyof CardLorcana] as string).toLowerCase() === value.toLowerCase()
+function callback(card: Card, filterName: string, value: string) {
+  return (card[filterName as keyof Card] as string).toLowerCase() === value.toLowerCase()
 }
 </script>
