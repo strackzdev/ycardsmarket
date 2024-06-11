@@ -2,7 +2,7 @@
   <div>
     <div :style="logoButtonsStyle">
       <div class="col-span-2 mt-10 ml-20 mr-4">
-        <img src="@/assets/images/logoWhite.png" alt="Image Description" class="w-23 h-28 mr-5">
+        <img :src="logoSrc" alt="Image Description" class="w-23 h-28 mr-5">
       </div>
       <div :style="buttonsStyle" class="mt-10 flex justify-end space-x-4 py-2 px-5">
         <Button @click="exchangeClicked" fontSize="1.3rem">LOGIN</Button>
@@ -13,8 +13,13 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import Button from "@/components/homeButton.vue";
+import logoWhite from '@/assets/images/logoWhite.png';
+import logoBlack from '@/assets/images/logoBlack.png';
 
+// Style objects
 const logoButtonsStyle = {
   position: 'absolute',
   width: '100%',
@@ -31,5 +36,14 @@ const buttonsStyle = {
   right: '0',
   marginRight: '200px',
   marginTop: '70px',
+};
+
+const route = useRoute();
+const logoSrc = computed(() => {
+  return route.name === 'home' ? logoWhite : logoBlack;
+});
+
+const exchangeClicked = () => {
+  // Your logic here
 };
 </script>
