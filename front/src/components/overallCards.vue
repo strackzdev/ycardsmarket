@@ -1,6 +1,6 @@
 <template>
-  <div class="transform -rotate-6 bg-primary shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out p-6 cursor-pointer max-w-sm text-white">
-    <h2 class="text-2xl font-bold mb-2 transform rotate-6">Card Title</h2>
+  <div class="transform -rotate-6 bg-primary shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out p-10 cursor-pointer min-w-lg max-w-lg min-h-lg text-white">
+    <h2 class="text-2xl font-bold mb-2 transform rotate-6 overflow-hidden break-words">{{ title }}</h2>
   </div>
 </template>
 
@@ -32,5 +32,17 @@ export default {
 <style scoped>
 .bg-primary {
   background-color: #1A1E3E;
+}
+
+.max-w-lg {
+  max-width: 300px; /* Adjust this value as needed */
+}
+
+.min-w-lg {
+  min-width: 300px; /* Adjust this value as needed */
+}
+
+.min-h-lg {
+  min-height: 150px; /* Adjust this value as needed */
 }
 </style>

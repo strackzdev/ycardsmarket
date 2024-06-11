@@ -7,7 +7,7 @@ import MenuItems from "@/components/menuItems.vue";
 </script>
 
 <template>
-  <menuItems class="pl-custom-left pr-custom-right"/>
+  <menuItems/>
 
   <RouterView/>
   <NavCards/>

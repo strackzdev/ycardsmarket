@@ -1,10 +1,9 @@
 <template>
-  <div>
     <div :style="logoButtonsStyle">
       <div class="col-span-2 mt-10 ml-20 mr-4">
         <img :src="logoSrc" alt="Image Description" class="w-23 h-28 mr-5">
       </div>
-      <div :style="buttonsStyle" class="mt-10 flex justify-end space-x-4 py-2 px-5">
+      <div :style="buttonsStyle" class="pr-custom mt-10 flex justify-end space-x-4 py-2 px-5">
         <Button
             @click="exchangeClicked"
             :style="buttonStyle"
@@ -21,7 +20,6 @@
         </Button>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -42,8 +40,13 @@ const logoSrc = computed(() => {
 // Computed property to determine button styles
 const buttonStyle = computed(() => {
   return route.name === 'home'
-      ? {}
+      ? {
+        padding: '1rem 2rem',
+        width: '200px',
+      }
       : {
+        padding: '1rem 2rem',
+        width: '200px',
         color: 'black',
         backgroundColor: 'white',
         border: '1px solid black',
@@ -59,18 +62,15 @@ const logoButtonsStyle = computed(() => {
         zIndex: '1000',
         display: 'flex',
         alignItems: 'center',
-        padding: '10px',
-        marginLeft: '70px',
       }
-      : {}; // Empty object to remove absolute positioning
+      : {};
 });
 
 const buttonsStyle = {
   position: 'absolute',
   top: '0',
   right: '0',
-  marginRight: '200px',
-  marginTop: '70px',
+  //marginRight: '200px',
 };
 
 const exchangeClicked = () => {

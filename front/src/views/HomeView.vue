@@ -1,14 +1,14 @@
 <template>
   <div class="relative h-screen overflow-hidden">
     <!-- Background with blur -->
-    <div class="absolute inset-0 background-image pl-custom-left"></div>
+    <div class="absolute inset-0 background-image"></div>
     <!-- Content -->
-    <div class="ml-40 relative z-10 grid grid-cols-3 gap-4">
+    <div class="pl-custom relative z-10 grid grid-cols-3 gap-4">
       <div class="text-center textMargin" style="width: 1100px;"> <!-- Adjust the width as needed -->
         <h1 class="mt-40 font-bold tracking-tight text-white sm:text-7xl text-left"
             style="font-size: 5rem; word-wrap: break-word;">Empower Your Deck, Trade with YCardsMarket!</h1>
-        <div class="mt-20 flex items-center gap-x-6">
-          <Button @click="exchangeClicked" fontSize="3rem">TRADE NOW !</Button>
+        <div class="mt-20 flex items-center">
+          <Button @click="exchangeClicked" fontSize="1.5rem" minWidth="200px">TRADE NOW !</Button>
         </div>
       </div>
     </div>
@@ -19,32 +19,28 @@
       Do you want to browse through available cards in the following TGC? Just click on the appropriate game!
     </p>
   </div>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-custom ml-8">
-    <div class="card-container mt-4 mb-4 ml-7">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="card-container mt-4 mb-4">
       <overall-cards
-          title="Card Title 1"
-          description="Description for card 1"
+          title="LORCANA"
           redirectUrl="https://example.com/1"
       />
     </div>
     <div class="card-container mt-4 mb-4">
       <overall-cards
-          title="Card Title 2"
-          description="Description for card 2"
+          title="MAGIC THE GATHERING"
           redirectUrl="https://example.com/2"
       />
     </div>
     <div class="card-container mt-4 mb-4">
       <overall-cards
-          title="Card Title 3"
-          description="Description for card 3"
+          title="POKEMON"
           redirectUrl="https://example.com/3"
       />
     </div>
     <div class="card-container mt-4 mb-4">
       <overall-cards
-          title="Card Title 4"
-          description="Description for card 4"
+          title="YU-GI-OH"
           redirectUrl="https://example.com/4"
       />
     </div>
@@ -59,7 +55,6 @@ import overallCards from '@/components/overallCards.vue';
 
 <style scoped>
 .textMargin {
-  margin-left: 30px;
   margin-top: 200px;
 }
 
@@ -68,7 +63,7 @@ import overallCards from '@/components/overallCards.vue';
   padding: inherit;
   background-size: cover;
   background-position: center;
-  filter: blur(8px);
+  filter: blur(4px);
   margin: -20px;
 }
 
@@ -84,7 +79,6 @@ import overallCards from '@/components/overallCards.vue';
 .card-container > overall-cards {
   text-align: center;
   display: inline-block;
-  max-width: 100%;
   font-size: 1em;
 }
 

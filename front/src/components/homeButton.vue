@@ -24,7 +24,7 @@ const isHovered = ref(false);
 const buttonBaseStyle = {
   fontWeight: 'bold',
   color: 'white',
-  padding: '0.75rem 1.5rem',
+  padding: '1rem 8rem',
   cursor: 'pointer',
 };
 
