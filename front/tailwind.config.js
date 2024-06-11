@@ -6,7 +6,11 @@ export default {
     "!./src/components/NavCards.vue", // Exclude navCard.vue from Tailwind CSS directives
   ],
     theme: {
-    extend: {},
+    extend: {
+      padding: {
+        'custom': '100px',
+      },
+    },
   },
   plugins: [],
 }
