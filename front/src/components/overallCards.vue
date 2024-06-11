@@ -1,6 +1,6 @@
 <template>
-  <div class="transform -rotate-3 bg-primary shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out p-6 rounded-lg cursor-pointer max-w-sm text-white">
-    <h2 class="text-2xl font-bold mb-2">Card Title</h2>
+  <div class="transform -rotate-6 bg-primary shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out p-6 cursor-pointer max-w-sm text-white">
+    <h2 class="text-2xl font-bold mb-2 transform rotate-6">Card Title</h2>
   </div>
 </template>
 

@@ -5,8 +5,20 @@
         <img :src="logoSrc" alt="Image Description" class="w-23 h-28 mr-5">
       </div>
       <div :style="buttonsStyle" class="mt-10 flex justify-end space-x-4 py-2 px-5">
-        <Button @click="exchangeClicked" fontSize="1.3rem">LOGIN</Button>
-        <Button @click="exchangeClicked" fontSize="1.3rem">REGISTER</Button>
+        <Button
+            @click="exchangeClicked"
+            :style="buttonStyle"
+            fontSize="1.3rem"
+        >
+          LOGIN
+        </Button>
+        <Button
+            @click="exchangeClicked"
+            :style="buttonStyle"
+            fontSize="1.3rem"
+        >
+          REGISTER
+        </Button>
       </div>
     </div>
   </div>
@@ -38,9 +50,23 @@ const buttonsStyle = {
   marginTop: '70px',
 };
 
+// Use the route object to determine the current route
 const route = useRoute();
+
+// Computed property to determine which logo to display
 const logoSrc = computed(() => {
   return route.name === 'home' ? logoWhite : logoBlack;
+});
+
+// Computed property to determine button styles
+const buttonStyle = computed(() => {
+  return route.name === 'home'
+      ? {}
+      : {
+        color: 'black',
+        backgroundColor: 'white',
+        border: '1px solid black',
+      };
 });
 
 const exchangeClicked = () => {
