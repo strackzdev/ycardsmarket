@@ -31,25 +31,6 @@ import Button from "@/components/homeButton.vue";
 import logoWhite from '@/assets/images/logoWhite.png';
 import logoBlack from '@/assets/images/logoBlack.png';
 
-// Style objects
-const logoButtonsStyle = {
-  position: 'absolute',
-  width: '100%',
-  zIndex: '1000',
-  display: 'flex',
-  alignItems: 'center',
-  padding: '10px',
-  marginLeft: '70px',
-};
-
-const buttonsStyle = {
-  position: 'absolute',
-  top: '0',
-  right: '0',
-  marginRight: '200px',
-  marginTop: '70px',
-};
-
 // Use the route object to determine the current route
 const route = useRoute();
 
@@ -68,6 +49,29 @@ const buttonStyle = computed(() => {
         border: '1px solid black',
       };
 });
+
+// Computed property to determine logo buttons style
+const logoButtonsStyle = computed(() => {
+  return route.name === 'home'
+      ? {
+        position: 'absolute',
+        width: '100%',
+        zIndex: '1000',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '10px',
+        marginLeft: '70px',
+      }
+      : {}; // Empty object to remove absolute positioning
+});
+
+const buttonsStyle = {
+  position: 'absolute',
+  top: '0',
+  right: '0',
+  marginRight: '200px',
+  marginTop: '70px',
+};
 
 const exchangeClicked = () => {
   // Your logic here
