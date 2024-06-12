@@ -20,10 +20,10 @@ export default {
   data() {
     return {
       menuItems: [
-        { label: 'Deck', path: '/decks', imageUrl: 'src/assets/images/yugiohNavCard.png' },
-        { label: 'Trading', path: '/', imageUrl: 'src/assets/images/pokemonNavCard.png' },
+        { label: 'Deck', path: { name: 'decks' }, imageUrl: 'src/assets/images/yugiohNavCard.png' },
+        { label: 'Trading', path: { name: 'trading' }, imageUrl: 'src/assets/images/pokemonNavCard.png' },
         { label: 'Cards', path: { name: 'collection' }, imageUrl: 'src/assets/images/lorcanaNavCard.png' },
-        { label: 'Home', path: '/home', imageUrl: 'src/assets/images/magicNavCard.png' }
+        { label: 'Home', path: '/', imageUrl: 'src/assets/images/magicNavCard.png' }
       ]
     };
   }
