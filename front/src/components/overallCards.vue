@@ -1,5 +1,5 @@
 <template>
-  <div class="transform -rotate-6 bg-primary shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out p-10 cursor-pointer min-w-lg max-h-lg max-w-lg min-h-lg text-white">
+  <div class="transform -rotate-6 navy-blue-bg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out p-10 cursor-pointer min-w-lg max-h-lg max-w-lg min-h-lg text-white">
     <h2 class="text-2xl text-center font-bold mb-2 transform rotate-6 overflow-hidden break-words">{{ title }}</h2>
   </div>
 </template>
