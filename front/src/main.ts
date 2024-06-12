@@ -6,6 +6,7 @@ import router from './router'
 import './index.css'
 import { createPinia } from 'pinia'
 
+
 const app = createApp(App)
 
 const pinia = createPinia()

@@ -1,11 +1,16 @@
 <template>
   <div class="container">
     <div class="fan-container">
-      <div class="fan" v-for="(item, index) in menuItems" :key="index">
-        <div class="card" :data-word="item.label" @click="navigate(item.component)">
-          <img :src="item.imageUrl" :alt="item.label" class="menu-img">
+      <router-link
+          v-for="(item, index) in menuItems"
+          :key="index"
+          :to="item.path"
+          class="fan"
+      >
+        <div class="card" :data-word="item.label">
+          <img :src="item.imageUrl" :alt="item.label" class="menu-img" />
         </div>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -15,30 +20,12 @@ export default {
   data() {
     return {
       menuItems: [
-        { label: 'Deck', component: 'component1', imageUrl: 'src/assets/images/yugiohNavCard.png' },
-        { label: 'Trading', component: 'component2', imageUrl: 'src/assets/images/pokemonNavCard.png' },
-        { label: 'Cards', component: 'component3', imageUrl: 'src/assets/images/lorcanaNavCard.png' },
-        { label: 'Home', component: 'component4', imageUrl: 'src/assets/images/magicNavCard.png' }
+        { label: 'Deck', path: { name: 'decks' }, imageUrl: 'src/assets/images/yugiohNavCard.png' },
+        { label: 'Trading', path: { name: 'trading' }, imageUrl: 'src/assets/images/pokemonNavCard.png' },
+        { label: 'Cards', path: { name: 'collection' }, imageUrl: 'src/assets/images/lorcanaNavCard.png' },
+        { label: 'Home', path: '/', imageUrl: 'src/assets/images/magicNavCard.png' }
       ]
     };
-  },
-  methods: {
-    navigate(component) {
-      switch(component) {
-        case 'component1':
-          this.$router.push({ path: '/decks' });
-          break;
-        case 'component2':
-          this.$router.push({ path: '/' });
-          break;
-        case 'component3':
-          this.$router.push({ path: '/collection' });
-          break;
-        case 'component4':
-          this.$router.push({ path: '/home' });
-          break;
-      }
-    }
   }
 };
 </script>
@@ -103,7 +90,6 @@ export default {
 .card:last-child {
   margin-right: 0; /* Remove right margin for the last card */
 }
-
 
 [data-word]:before {
   content: attr(data-word); /* Set the content to the value of the data-word attribute */
