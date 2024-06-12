@@ -30,9 +30,6 @@ export default {
 </script>
 
 <style scoped>
-.bg-primary {
-  background-color: #1A1E3E;
-}
 
 .max-w-lg {
   max-width: 200px; /* Adjust this value as needed */
