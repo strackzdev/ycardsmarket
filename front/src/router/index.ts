@@ -4,6 +4,7 @@ import DecksView from '@/views/DecksView.vue'
 import DeckBuilderView from '@/views/DeckBuilderView.vue'
 import CollectionView from '@/views/CollectionView.vue'
 import TradingView from '@/views/TradingView.vue'
+import LoginView from '@/views/LoginView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,11 @@ const router = createRouter({
       path: '/trading',
       name: 'trading',
       component: TradingView
+    },
+    {
+      path: '/login',
+      name: 'trading',
+      component: LoginView
     }
   ]
 })
