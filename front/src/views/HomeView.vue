@@ -33,8 +33,8 @@
 
 <script setup lang="ts">
 import {reactive} from 'vue';
-import Button from '@/components/homeButton.vue';
-import overallCards from '@/components/overallCards.vue';
+import Button from '@/components/homePage/HomeButton.vue';
+import overallCards from '@/components/homePage/OverallCards.vue';
 
 const cards = reactive([
   {title: 'LORCANA', redirectUrl: 'https://example.com/1'},

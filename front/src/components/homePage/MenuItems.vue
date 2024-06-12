@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import Button from "@/components/homeButton.vue";
+import Button from "@/components/homePage/HomeButton.vue";
 import logoWhite from '@/assets/images/logoWhite.png';
 import logoBlack from '@/assets/images/logoBlack.png';
 
