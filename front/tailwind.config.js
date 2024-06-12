@@ -3,7 +3,7 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
-    "!./src/components/NavCards.vue", // Exclude navCard.vue from Tailwind CSS directives
+    "!./src/components/NavigationCards.vue", // Exclude navCard.vue from Tailwind CSS directives
   ],
     theme: {
     extend: {
