@@ -40,7 +40,7 @@ const router = createRouter({
     },
     {
       path: '/login',
-      name: 'trading',
+      name: 'login',
       component: LoginView
     }
   ]
