@@ -5,14 +5,13 @@
       </div>
       <div :style="buttonsStyle" class="pr-custom mt-10 flex justify-end space-x-4 py-2 px-5">
         <Button
-            @click="exchangeClicked"
+            @click="login"
             :style="buttonStyle"
             fontSize="1.3rem"
         >
           LOGIN
         </Button>
         <Button
-            @click="exchangeClicked"
             :style="buttonStyle"
             fontSize="1.3rem"
         >
@@ -24,13 +23,14 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Button from "@/components/homePage/Buttons.vue";
 import logoWhite from '@/assets/images/logoWhite.png';
 import logoBlack from '@/assets/images/logoBlack.png';
 
 // Use the route object to determine the current route
 const route = useRoute();
+const router = useRouter();
 
 // Computed property to determine which logo to display
 const logoSrc = computed(() => {
@@ -73,7 +73,7 @@ const buttonsStyle = {
   //marginRight: '200px',
 };
 
-const exchangeClicked = () => {
-  // Your logic here
+function login() {
+  router.push({name:'login'})
 };
 </script>

@@ -46,6 +46,10 @@
 import axios from 'axios'
 import { reactive, ref } from 'vue';
 import ToastComponent from '@/components/utils/ToastComponent.vue'
+import { useRouter } from 'vue-router';
+
+// Constants
+const router = useRouter();
 
 // Types
 interface LoginForm {
@@ -79,7 +83,10 @@ function login() {
   }
 
   axios(options)
-  .then(res => localStorage.setItem('token', res.data.access_token))
+  .then(res => {
+    localStorage.setItem('token', res.data.access_token)
+    router.push({ name: 'home'})
+  })
   .catch(() => {
     toastIsVisible.value = true
     toastContent.value = 'Username or password incorrect'
