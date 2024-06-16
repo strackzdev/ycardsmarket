@@ -1,24 +1,19 @@
 <template>
-    <div :style="logoButtonsStyle">
-      <div class="col-span-2 mt-10 ml-20 mr-4">
-        <img :src="logoSrc" alt="Image Description" class="w-23 h-28 mr-5">
+  <div :style="logoButtonsStyle">
+    <div class="col-span-2 mt-10 ml-20 mr-4">
+      <img :src="logoSrc" alt="Image Description" class="w-23 h-28 mr-5">
+    </div>
+    
+    <div :style="buttonsStyle" class="pr-custom mt-10 flex justify-end py-2 px-5">
+      <div v-if="existsToken">
+        <Button @click="logout" :style="buttonStyle" fontSize="1.3rem">LOGOUT</Button>
       </div>
-      <div :style="buttonsStyle" class="pr-custom mt-10 flex justify-end space-x-4 py-2 px-5">
-        <Button
-            @click="login"
-            :style="buttonStyle"
-            fontSize="1.3rem"
-        >
-          LOGIN
-        </Button>
-        <Button
-            :style="buttonStyle"
-            fontSize="1.3rem"
-        >
-          REGISTER
-        </Button>
+      <div v-else>
+        <Button @click="login" :style="buttonStyle" fontSize="1.3rem">LOGIN</Button>
+        <Button class="ml-4" :style="buttonStyle" fontSize="1.3rem">REGISTER</Button>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -28,9 +23,14 @@ import Button from "@/components/homePage/Buttons.vue";
 import logoWhite from '@/assets/images/logoWhite.png';
 import logoBlack from '@/assets/images/logoBlack.png';
 
-// Use the route object to determine the current route
+// Constants
 const route = useRoute();
 const router = useRouter();
+
+// Computeds
+const existsToken = computed(() => {
+  return localStorage.getItem('token') ? true : false;
+});
 
 // Computed property to determine which logo to display
 const logoSrc = computed(() => {
@@ -73,7 +73,13 @@ const buttonsStyle = {
   //marginRight: '200px',
 };
 
+// Functions
 function login() {
-  router.push({name:'login'})
-};
+  router.push({name:'login'});
+}
+
+function logout() {
+  localStorage.removeItem('token');
+  router.push({name:'login'});
+}
 </script>
