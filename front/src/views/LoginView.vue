@@ -1,6 +1,9 @@
 <template>
 <section class="h-screen navy-blue-bg">
+  
   <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <ToastComponent :is-visible="toastIsVisible" :content="toastContent"/>
+    
     <a href="#" class="flex items-center mb-6 text-2xl font-semibold navy-blue">
       <img src="../../src/assets/images/logoWhite.png" alt="Image Description" class="w-23 h-28"> 
     </a>
@@ -36,26 +39,31 @@
     </div>
   </div>
 </section>
+
 </template>
 
 <script setup lang="ts">
 import axios from 'axios'
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
+import ToastComponent from '@/components/utils/ToastComponent.vue'
 
+// Types
 interface LoginForm {
   username: string,
   password: string,
 }
 
+// Refs
 const loginForm = reactive<LoginForm>({
   username: '',
   password: ''
 })
 
+const toastIsVisible = ref<boolean>(false);
+const toastContent = ref<string>('');
 
-const login = () => {
-  console.log('Form Data:', { name: loginForm.username, email: loginForm.password });
-
+// Functions
+function login() {
   const data = { 
     username: loginForm.username,
     password: loginForm.password,
@@ -72,6 +80,9 @@ const login = () => {
 
   axios(options)
   .then(res => localStorage.setItem('token', res.data.access_token))
-  .catch(error => console.log(error))
+  .catch(() => {
+    toastIsVisible.value = true
+    toastContent.value = 'Username or password incorrect'
+  })
 };
 </script>
