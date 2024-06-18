@@ -34,7 +34,9 @@ The repository is organized into four main folders:
 git clone git@github.com:strackzdev/back.git
 ```
 
-2. Run the docker compose application (Extra documentation under development):
+2. Create a .env in the root of the 'front' folder with the information of the .env.template and change value with yours.
+
+3. Run the docker compose application (Extra documentation under development):
 
 ```bash
 npm run compose:dev
