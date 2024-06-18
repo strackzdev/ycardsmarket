@@ -9,7 +9,7 @@ import { ref } from 'vue';
 
   const cardgames = ref<string>();
 
-  axios.get('backend/cardgames').then(res => {
+  axios.get(`${import.meta.env.VITE_BACKEND_PROXY}/cardgames`).then(res => {
     cardgames.value = res.data
   })
 
