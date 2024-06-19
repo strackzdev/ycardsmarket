@@ -72,14 +72,14 @@ function login() {
     username: loginForm.username,
     password: loginForm.password,
     grant_type: 'password',
-    client_id: 'trady-go-login',
+    client_id: import.meta.env.VITE_KEYCLOAK_CLIEND_ID,
   };
 
   const options = {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     data,
-    url: 'https://vps.strackzdev.com/realms/tradygo-realm/protocol/openid-connect/token'
+    url: `${import.meta.env.VITE_KEYCLOAK_URL}/token`
   }
 
   axios(options)
