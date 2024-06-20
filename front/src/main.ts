@@ -49,10 +49,24 @@ axios.interceptors.response.use(
 
         return await axios(currentRequest)
       } catch (err) {
-        router.push({ name: 'login'})
-
+        const data = { 
+          client_id: import.meta.env.VITE_KEYCLOAK_CLIEND_ID,
+          refresh_token: localStorage.getItem('refresh_token')
+        };
+        
+        const options = {
+          method: 'POST',
+          headers: { 'content-type': 'application/x-www-form-urlencoded' },
+          data,
+          url: `${import.meta.env.VITE_KEYCLOAK_URL}/logout`
+        }
+        
+        await axios(options)
+        
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+      
+        router.push({name:'login'});
 
         return Promise.reject('Unauthorized');
       }

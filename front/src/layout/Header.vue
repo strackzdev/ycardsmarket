@@ -22,6 +22,7 @@ import { useRoute, useRouter } from 'vue-router';
 import Button from "@/components/homePage/Buttons.vue";
 import logoWhite from '@/assets/images/logoWhite.png';
 import logoBlack from '@/assets/images/logoBlack.png';
+import axios from 'axios';
 
 // Constants
 const route = useRoute();
@@ -78,8 +79,24 @@ function login() {
   router.push({name:'login'});
 }
 
-function logout() {
-  localStorage.removeItem('token');
+async function logout() {
+  const data = { 
+    client_id: import.meta.env.VITE_KEYCLOAK_CLIEND_ID,
+    refresh_token: localStorage.getItem('refresh_token')
+  };
+  
+  const options = {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    data,
+    url: `${import.meta.env.VITE_KEYCLOAK_URL}/logout`
+  }
+  
+  await axios(options)
+  
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
+
   router.push({name:'login'});
 }
 </script>
