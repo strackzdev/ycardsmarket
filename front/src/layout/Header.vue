@@ -29,7 +29,7 @@ const router = useRouter();
 
 // Computeds
 const existsToken = computed(() => {
-  return localStorage.getItem('token') ? true : false;
+  return localStorage.getItem('access_token') ? true : false;
 });
 
 // Computed property to determine which logo to display
