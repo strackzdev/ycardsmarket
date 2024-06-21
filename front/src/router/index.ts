@@ -14,6 +14,7 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
+      beforeEnter: [redirectToHome]
     },
     {
       path: '/',
@@ -32,12 +33,14 @@ const router = createRouter({
         {
           path: '/decks',
           name: 'decks',
-          component: DecksView
+          component: DecksView,
+          beforeEnter: [redirectToLogin]
         },
         {
           path: '/deck-builder',
           name: 'deck-builder',
-          component: DeckBuilderView
+          component: DeckBuilderView,
+          beforeEnter: [redirectToLogin]
         },
         {
           path: '/:pathMatch(.*)*',
@@ -46,11 +49,24 @@ const router = createRouter({
         {
           path: '/trading',
           name: 'trading',
-          component: TradingView
+          component: TradingView,
+          beforeEnter: [redirectToLogin]
         }
       ]
     }
   ]
 })
+
+function isAuthenticated(): boolean {
+  return localStorage.getItem('access_token') && localStorage.getItem('refresh_token') ? true : false;
+}
+
+function redirectToLogin() {
+  if (!isAuthenticated()) return { name: 'login' }
+}
+
+function redirectToHome() {
+  if (isAuthenticated()) return { name: 'home' }
+}
 
 export default router
