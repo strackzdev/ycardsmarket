@@ -6,10 +6,10 @@
     
     <div :style="buttonsStyle" class="pr-custom mt-10 flex justify-end py-2 px-5">
       <div v-if="existsToken">
-        <Button @click="logout" :style="buttonStyle" fontSize="1.3rem">LOGOUT</Button>
+        <Button @click="logoutOnClick" :style="buttonStyle" fontSize="1.3rem">LOGOUT</Button>
       </div>
       <div v-else>
-        <Button @click="login" :style="buttonStyle" fontSize="1.3rem">LOGIN</Button>
+        <Button @click="loginOnClick" :style="buttonStyle" fontSize="1.3rem">LOGIN</Button>
         <Button class="ml-4" :style="buttonStyle" fontSize="1.3rem">REGISTER</Button>
       </div>
     </div>
@@ -22,7 +22,7 @@ import { useRoute, useRouter } from 'vue-router';
 import Button from "@/components/homePage/Buttons.vue";
 import logoWhite from '@/assets/images/logoWhite.png';
 import logoBlack from '@/assets/images/logoBlack.png';
-import axios from 'axios';
+import { logout } from '@/auth/auth';
 
 // Constants
 const route = useRoute();
@@ -75,27 +75,12 @@ const buttonsStyle = {
 };
 
 // Functions
-function login() {
+function loginOnClick() {
   router.push({name:'login'});
 }
 
-async function logout() {
-  const data = { 
-    client_id: import.meta.env.VITE_KEYCLOAK_CLIEND_ID,
-    refresh_token: localStorage.getItem('refresh_token')
-  };
-  
-  const options = {
-    method: 'POST',
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    data,
-    url: `${import.meta.env.VITE_KEYCLOAK_URL}/logout`
-  }
-  
-  await axios(options)
-  
-  localStorage.removeItem('access_token');
-  localStorage.removeItem('refresh_token');
+async function logoutOnClick() {
+  await logout();
 
   router.push({name:'login'});
 }
