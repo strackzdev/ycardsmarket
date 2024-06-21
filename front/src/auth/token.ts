@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 const getAccessToken = (): string | null => {
     return localStorage.getItem('access_token');
 }
@@ -22,11 +24,33 @@ const removeRefreshToken = (): void => {
     localStorage.removeItem('refresh_token');
 }
 
+const renewAccessToken = async (): Promise<string> => {
+    const data = { 
+        grant_type: 'refresh_token',
+        client_id: import.meta.env.VITE_KEYCLOAK_CLIEND_ID,
+        refresh_token: getRefreshToken()
+    };
+
+    const options = {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        data,
+        url: `${import.meta.env.VITE_KEYCLOAK_URL}/token`
+    };
+    
+    const response = await axios(options)
+    setAccessToken(response.data.access_token);
+    setRefreshToken(response.data.refresh_token);
+
+    return response.data.access_token;
+}
+
 export { 
     getAccessToken,
     getRefreshToken,
     setAccessToken,
     setRefreshToken,
     removeAccessToken,
-    removeRefreshToken
+    removeRefreshToken,
+    renewAccessToken
 }
