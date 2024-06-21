@@ -5,6 +5,8 @@ import router from './router'
 import './index.css'
 import { createPinia } from 'pinia'
 import axios, { type InternalAxiosRequestConfig, AxiosError } from 'axios'
+import { logout } from './auth/auth'
+import { getAccessToken, getRefreshToken, setAccessToken, setRefreshToken } from './auth/token'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -13,8 +15,8 @@ app.use(pinia)
 app.use(router)
 
 axios.interceptors.request.use((config) => {
-  const access_token = localStorage.getItem('access_token')
-  if (localStorage.getItem('access_token')) {
+  const access_token = getAccessToken();
+  if (access_token) {
     config.headers.Authorization = `Bearer ${access_token}`;
   }
   return config;
@@ -29,7 +31,7 @@ axios.interceptors.response.use(
       const data = { 
         grant_type: 'refresh_token',
         client_id: import.meta.env.VITE_KEYCLOAK_CLIEND_ID,
-        refresh_token: localStorage.getItem('refresh_token')
+        refresh_token: getRefreshToken()
       };
     
       const options = {
@@ -37,35 +39,20 @@ axios.interceptors.response.use(
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data,
         url: `${import.meta.env.VITE_KEYCLOAK_URL}/token`
-      }
+      };
     
       try {     
-        const resp = await axios(options)
+        const response = await axios(options)
 
-        localStorage.setItem('access_token', resp.data.access_token)
-        localStorage.setItem('refresh_token', resp.data.refresh_token)
+        setAccessToken(response.data.access_token);
+        setRefreshToken(response.data.refresh_token);
 
-        currentRequest.headers['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`
+        currentRequest.headers['Authorization'] = `Bearer ${getAccessToken()}`;
 
-        return await axios(currentRequest)
-      } catch (err) {
-        const data = { 
-          client_id: import.meta.env.VITE_KEYCLOAK_CLIEND_ID,
-          refresh_token: localStorage.getItem('refresh_token')
-        };
-        
-        const options = {
-          method: 'POST',
-          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-          data,
-          url: `${import.meta.env.VITE_KEYCLOAK_URL}/logout`
-        }
-        
-        await axios(options)
-        
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-      
+        return await axios(currentRequest);
+      } catch (e) {
+        await logout();
+
         router.push({name:'login'});
 
         return Promise.reject('Unauthorized');

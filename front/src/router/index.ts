@@ -6,6 +6,7 @@ import CollectionView from '@/views/CollectionView.vue'
 import TradingView from '@/views/TradingView.vue'
 import LoginView from '@/views/LoginView.vue'
 import MainLayout from '@/layout/MainLayout.vue'
+import { isAuthenticated } from '@/auth/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -56,10 +57,6 @@ const router = createRouter({
     }
   ]
 })
-
-function isAuthenticated(): boolean {
-  return localStorage.getItem('access_token') && localStorage.getItem('refresh_token') ? true : false;
-}
 
 function redirectToLogin() {
   if (!isAuthenticated()) return { name: 'login' }
