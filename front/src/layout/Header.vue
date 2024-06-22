@@ -23,6 +23,7 @@ import Button from "@/components/homePage/Buttons.vue";
 import logoWhite from '@/assets/images/logoWhite.png';
 import logoBlack from '@/assets/images/logoBlack.png';
 import { logout } from '@/auth/auth';
+import { getAccessToken } from '@/auth/token';
 
 // Constants
 const route = useRoute();
@@ -30,7 +31,7 @@ const router = useRouter();
 
 // Computeds
 const existsToken = computed(() => {
-  return localStorage.getItem('access_token') ? true : false;
+  return getAccessToken() ? true : false;
 });
 
 // Computed property to determine which logo to display
