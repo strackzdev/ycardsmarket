@@ -10,7 +10,7 @@
     <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
       <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
         <h1 class="text-xl font-bold leading-tight tracking-tight navy-blue md:text-2xl">Log in to YCardsMarket</h1>
-        <form class="space-y-4 md:space-y-6" @submit.prevent="login">
+        <form class="space-y-4 md:space-y-6" @submit.prevent="loginOnSubmit()">
           <div>
             <label for="email" class="block mb-2 text-sm font-medium navy-blue">Email or username</label>
             <input v-model="loginForm.username" type="text" class="bg-gray-50 border border-gray-300 navy-blue sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="player@ycardmarket.com or username" required>
@@ -47,6 +47,8 @@ import axios from 'axios'
 import { reactive, ref } from 'vue';
 import ToastComponent from '@/components/utils/ToastComponent.vue'
 import { useRouter } from 'vue-router';
+import { setAccessToken, setRefreshToken } from '@/auth/token';
+import { login } from '@/auth/auth';
 
 // Constants
 const router = useRouter();
@@ -67,29 +69,13 @@ const toastIsVisible = ref<boolean>(false);
 const toastContent = ref<string>('');
 
 // Functions
-function login() {
-  const data = { 
-    username: loginForm.username,
-    password: loginForm.password,
-    grant_type: 'password',
-    client_id: import.meta.env.VITE_KEYCLOAK_CLIEND_ID,
-  };
-
-  const options = {
-    method: 'POST',
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    data,
-    url: `${import.meta.env.VITE_KEYCLOAK_URL}/token`
-  }
-
-  axios(options).then(res => {
-    localStorage.setItem('access_token', res.data.access_token);
-    localStorage.setItem('refresh_token', res.data.refresh_token);
-    router.push({ name: 'home'})
-  })
-  .catch(() => {
+async function loginOnSubmit() {
+  try {
+    await login(loginForm.username, loginForm.password);
+    router.push({ name: 'home'});
+  } catch(e) {
     toastIsVisible.value = true
     toastContent.value = 'Username or password incorrect'
-  })
+  }
 };
 </script>
