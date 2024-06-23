@@ -93,18 +93,18 @@ function getSearchValue(filter: Filter) {
 }
 
 function findAndReplaceOrPush(arr: Filter[], target: Filter) {
-    if (arr.some((element, index) => {
-        if (element.filterName === target.filterName) {
-            arr[index] = target;
-            return true;
-        }
-        return false;
-    })) {
-        return arr;
-    } else {
-        arr.push(target);
-        return arr;
+  if (arr.some((element, index) => {
+    if (element.filterName === target.filterName) {
+      target.value ? arr[index] = target : arr.splice(index, 1)
+      return true;
     }
+    return false;
+  })) {
+      return arr;
+  } else {
+      arr.push(target);
+      return arr;
+  }
 }
 
 async function getFilterValue(filter: Filter) {
@@ -123,7 +123,7 @@ async function getFilterValue(filter: Filter) {
   findAndReplaceOrPush(filters.value, filter)
 
   pageIndex = 0;
-  
+
   const cardRetrieved = await getCards(quantityOfCardToAdd, filters.value)
   cards.value = [... cardRetrieved.data.items];
 }

@@ -22,7 +22,7 @@ export enum CardLorcanaSet {
 }
 
 export enum CardLorcanaProperty {
-    TYPE="Type",
-    RARITY="Rarity",
-    SET_NAME="SetName"
+    TYPE="type",
+    RARITY="rarity",
+    SET_NAME="setName"
 }
