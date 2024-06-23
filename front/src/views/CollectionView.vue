@@ -57,7 +57,7 @@ onMounted(async () => {
 })
 
 // Functions
-async function getCards(pageSize: number, filters?: Filter[], pageIndex?: number): Promise<AxiosResponse<Page<CardLorcana>, any>> {
+async function getCards(pageSize: number, filters?: Filter[], pageIndex?: number, search?: string): Promise<AxiosResponse<Page<CardLorcana>, any>> {
   let params = "";
 
   if(filters) {
@@ -66,11 +66,13 @@ async function getCards(pageSize: number, filters?: Filter[], pageIndex?: number
     })
   }
 
+  if(search) {
+    params += `&name=${search}`
+  }
+
   if(pageIndex) {
     params += `&pageIndex=${pageIndex}`;
   }
-
-  console.log("params :", params)
 
   const res = await axios.get<Page<CardLorcana>>(`${import.meta.env.VITE_BACKEND_PROXY}/cards?sortDirection=ASC&sortBy=name&pageSize=${pageSize}${params}`)
   totalPages = res.data.totalPages;
@@ -81,15 +83,17 @@ async function getCards(pageSize: number, filters?: Filter[], pageIndex?: number
 async function intersected() {
   if(pageIndex < totalPages) {
     pageIndex++;
-    const cardRetrieved = await getCards(quantityOfCardToAdd, filters.value, pageIndex);
+    const cardRetrieved = await getCards(quantityOfCardToAdd, filters.value, pageIndex, searchValue.value);
     cards.value = [...cards.value, ...cardRetrieved.data.items];
   }
 }
 
-function getSearchValue(filter: Filter) {
+async function getSearchValue(filter: Filter) {
   searchValue.value = filter.value;
+  pageIndex = 0;
 
-  // refreshCards();
+  const cardRetrieved = await getCards(quantityOfCardToAdd, filters.value, pageIndex, searchValue.value);
+  cards.value = [...cardRetrieved.data.items];
 }
 
 function findAndReplaceOrPush(arr: Filter[], target: Filter) {
@@ -124,12 +128,7 @@ async function getFilterValue(filter: Filter) {
 
   pageIndex = 0;
 
-  const cardRetrieved = await getCards(quantityOfCardToAdd, filters.value)
+  const cardRetrieved = await getCards(quantityOfCardToAdd, filters.value, pageIndex, searchValue.value)
   cards.value = [... cardRetrieved.data.items];
 }
-
-function searchByName(cards: CardLorcana[], value: string): CardLorcana[] {
-  return cards.filter(card => card.name.toLowerCase().includes(value.toLowerCase()))
-}
-
 </script>
