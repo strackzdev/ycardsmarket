@@ -8,8 +8,13 @@
 
 <script setup lang="ts">
 import {CardLorcanaSet, CardLorcanaType, CardLorcanaRarity, CardLorcanaProperty} from '@/components/card/CardLorcanaEnum'
-import type { Filter } from '@/views/CollectionView.vue';
 import { computed } from 'vue';
+
+// Type
+export interface Filter {
+  filterName: string,
+  value: string
+}
 
 // Props
 const props = defineProps<{

@@ -22,17 +22,11 @@ import type { CardLorcana } from '@/components/card/CardInterface';
 import CardLorcanaComponent from '@/components/card/CardLorcanaComponent.vue';
 import InfiniteScrollingComponent from '@/components/utils/InfiniteScrollingComponent.vue';
 import SearchBarComponent from '@/components/utils/SearchBarComponent.vue';
-import FilterDropdownComponent from '@/components/utils/FilterDropdownComponent.vue';
+import FilterDropdownComponent, { type Filter } from '@/components/utils/FilterDropdownComponent.vue';
 import axios, { type AxiosResponse } from 'axios';
 import { onMounted, ref, type Ref } from 'vue';
 import { CardLorcanaType, CardLorcanaSet, CardLorcanaRarity, CardLorcanaProperty } from '@/components/card/CardLorcanaEnum';
 import type { Page } from '@/types/page';
-
-// Type
-export interface Filter {
-  filterName: string,
-  value: string
-}
 
 // Consts
 const quantityOfCardToAdd = 20;
@@ -80,23 +74,24 @@ async function getCards(pageSize: number, filters?: Filter[], pageIndex?: number
   return res;
 }
 
-async function intersected() {
+async function intersected(): Promise<void> {
   if(pageIndex < totalPages) {
     pageIndex++;
-    const cardRetrieved = await getCards(quantityOfCardToAdd, filters.value, pageIndex, searchValue.value);
-    cards.value = [...cards.value, ...cardRetrieved.data.items];
+
+    cards.value = [
+      ...cards.value,
+      ...(await getCards(quantityOfCardToAdd, filters.value, pageIndex, searchValue.value)).data.items
+    ];
   }
 }
 
-async function getSearchValue(filter: Filter) {
+async function getSearchValue(filter: Filter): Promise<void> {
   searchValue.value = filter.value;
   pageIndex = 0;
-
-  const cardRetrieved = await getCards(quantityOfCardToAdd, filters.value, pageIndex, searchValue.value);
-  cards.value = [...cardRetrieved.data.items];
+  cards.value = [...(await getCards(quantityOfCardToAdd, filters.value, pageIndex, searchValue.value)).data.items]
 }
 
-function findAndReplaceOrPush(arr: Filter[], target: Filter) {
+function findAndReplaceOrPush(arr: Filter[], target: Filter): Filter[] {
   if (arr.some((element, index) => {
     if (element.filterName === target.filterName) {
       target.value ? arr[index] = target : arr.splice(index, 1)
@@ -104,14 +99,14 @@ function findAndReplaceOrPush(arr: Filter[], target: Filter) {
     }
     return false;
   })) {
-      return arr;
+    return arr;
   } else {
-      arr.push(target);
-      return arr;
+    arr.push(target);
+    return arr;
   }
 }
 
-async function getFilterValue(filter: Filter) {
+async function getFilterValue(filter: Filter): Promise<void> {
   switch(filter.filterName) {
     case 'set_name':
     filterSet.value = filter.value;
@@ -125,10 +120,7 @@ async function getFilterValue(filter: Filter) {
   }
 
   findAndReplaceOrPush(filters.value, filter)
-
   pageIndex = 0;
-
-  const cardRetrieved = await getCards(quantityOfCardToAdd, filters.value, pageIndex, searchValue.value)
-  cards.value = [... cardRetrieved.data.items];
+  cards.value = [...(await getCards(quantityOfCardToAdd, filters.value, pageIndex, searchValue.value)).data.items]
 }
 </script>
