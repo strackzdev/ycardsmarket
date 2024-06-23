@@ -3,7 +3,7 @@
     <img
       class="rounded-2xl w-fit"
       :class="[isRotated ? 'rotate-90 aspect-square scale-x-75' : '']"
-      :src="props.card.image_url"
+      :src="props.card.imageUrl"
       alt=""
     />
   </div>

@@ -17,11 +17,12 @@ export enum CardLorcanaRarity {
 export enum CardLorcanaSet {
     INTO_THE_INKLANDS="Into the Inklands",
     THE_FIRST_CHAPTER="The First Chapter",
-    RISE_OF_THE_FLOODBORN="Rise of the Floodborn"
+    RISE_OF_THE_FLOODBORN="Rise of the Floodborn",
+    URSULAS_RETURN="Ursula's Return"
 }
 
 export enum CardLorcanaProperty {
-    TYPE="TYPE",
-    RARITY="RARITY",
-    SET_NAME="SET"
+    TYPE="Type",
+    RARITY="Rarity",
+    SET_NAME="SetName"
 }

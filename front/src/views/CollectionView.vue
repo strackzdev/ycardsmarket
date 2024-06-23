@@ -11,7 +11,7 @@
   </div>
   <div class="min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8">
     <div class="px-4 md:max-w-full m-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-16">
-      <CardLorcanaComponent v-for="card in cardsDisplayed" :key="card.id" :card=card />
+      <CardLorcanaComponent v-for="card in cards" :key="card.id" :card=card />
       <InfiniteScrollingComponent @intersect="intersected"/>
     </div>
   </div>
@@ -23,9 +23,10 @@ import CardLorcanaComponent from '@/components/card/CardLorcanaComponent.vue';
 import InfiniteScrollingComponent from '@/components/utils/InfiniteScrollingComponent.vue';
 import SearchBarComponent from '@/components/utils/SearchBarComponent.vue';
 import FilterDropdownComponent from '@/components/utils/FilterDropdownComponent.vue';
-import axios from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 import { onMounted, ref, type Ref } from 'vue';
-import { CardLorcanaType, CardLorcanaSet, CardLorcanaRarity } from '@/components/card/CardLorcanaEnum';
+import { CardLorcanaType, CardLorcanaSet, CardLorcanaRarity, CardLorcanaProperty } from '@/components/card/CardLorcanaEnum';
+import type { Page } from '@/types/page';
 
 // Type
 export interface Filter {
@@ -37,11 +38,12 @@ export interface Filter {
 const quantityOfCardToAdd = 20;
 
 // Variables
-let cards: CardLorcana[] = [];
+let pageIndex = 0;
+let totalPages = 0;
 
 // Refs
-const cardsDisplayed: Ref<CardLorcana[]> = ref([]);
-const cardsRemainingToDisplay: Ref<CardLorcana[]> = ref([]);
+const cards = ref<CardLorcana[]>([]);
+const filters = ref<Filter[]>([]);
 
 const searchValue: Ref<string | undefined> = ref();
 const filterSet: Ref<string | undefined> = ref();
@@ -49,37 +51,63 @@ const filterType: Ref<string | undefined> = ref();
 const filterRarity: Ref<string | undefined> = ref();
 
 // Hooks
-onMounted(async() => {
-  cards.push(...await getCards());
-  cardsRemainingToDisplay.value = [...cards]
-
-  getCardsByQuantity(quantityOfCardToAdd);
+onMounted(async () => {
+  const cardRetrieved = await getCards(quantityOfCardToAdd)
+  cards.value = [...cardRetrieved.data.items];
 })
 
 // Functions
-async function getCards(): Promise<CardLorcana[]> {
-  return (await axios.get('https://ycardsmarket.onrender.com/api/v1/lorcana/?format=json')).data;
-}
+async function getCards(pageSize: number, filters?: Filter[], pageIndex?: number): Promise<AxiosResponse<Page<CardLorcana>, any>> {
+  let params = "";
 
-function getCardsByQuantity(quantity: number): void { 
-  cardsDisplayed.value.push(...cardsRemainingToDisplay.value.splice(0, quantity));
-}
+  if(filters) {
+    filters.forEach(filter => {
+      params += `&${CardLorcanaProperty[filter.filterName.toUpperCase() as keyof typeof CardLorcanaProperty]}=${filter.value}`;
+    })
+  }
 
-function resetCardsDisplayed() {
-  cardsDisplayed.value = []
+  if(pageIndex) {
+    params += `&pageIndex=${pageIndex}`;
+  }
+
+  console.log("params :", params)
+
+  const res = await axios.get<Page<CardLorcana>>(`${import.meta.env.VITE_BACKEND_PROXY}/cards?sortDirection=ASC&sortBy=name&pageSize=${pageSize}${params}`)
+  totalPages = res.data.totalPages;
+
+  return res;
 }
 
 async function intersected() {
-  getCardsByQuantity(quantityOfCardToAdd);
+  if(pageIndex < totalPages) {
+    pageIndex++;
+    const cardRetrieved = await getCards(quantityOfCardToAdd, filters.value, pageIndex);
+    cards.value = [...cards.value, ...cardRetrieved.data.items];
+  }
 }
 
 function getSearchValue(filter: Filter) {
   searchValue.value = filter.value;
 
-  refreshCards();
+  // refreshCards();
 }
 
-function getFilterValue(filter: Filter) { 
+function findAndReplaceOrPush(arr: Filter[], target: Filter) {
+    if (arr.some((element, index) => {
+        if (element.filterName === target.filterName) {
+            arr[index] = target;
+            return true;
+        }
+        return false;
+    })) {
+        return arr;
+    } else {
+        arr.push(target);
+        return arr;
+    }
+}
+
+async function getFilterValue(filter: Filter) {
   switch(filter.filterName) {
     case 'set_name':
     filterSet.value = filter.value;
@@ -92,42 +120,16 @@ function getFilterValue(filter: Filter) {
       break;
   }
 
-  refreshCards();
-}
+  findAndReplaceOrPush(filters.value, filter)
 
-function refreshCards(): void {
-  let cardsCopy: CardLorcana[]  = [...cards]
-
-  if (searchValue.value) {
-    cardsCopy = searchByName(cardsCopy, searchValue.value)
-  }
-
-  if (filterSet.value) {
-    cardsCopy = filterBy(cardsCopy, 'set_name', filterSet.value)
-  }
-  if (filterType.value) {
-    cardsCopy = filterBy(cardsCopy, 'type', filterType.value)
-  }
-  if (filterRarity.value) {
-    cardsCopy = filterBy(cardsCopy, 'rarity', filterRarity.value)
-  }
+  pageIndex = 0;
   
-  cardsRemainingToDisplay.value = cardsCopy;
-
-  resetCardsDisplayed()
-  getCardsByQuantity(quantityOfCardToAdd)
-
+  const cardRetrieved = await getCards(quantityOfCardToAdd, filters.value)
+  cards.value = [... cardRetrieved.data.items];
 }
 
 function searchByName(cards: CardLorcana[], value: string): CardLorcana[] {
   return cards.filter(card => card.name.toLowerCase().includes(value.toLowerCase()))
 }
 
-function filterBy(cards: CardLorcana[], filterName: string, value: string) {
-  return cards.filter(card => callback(card, filterName, value))
-}
-
-function callback(card: CardLorcana, filterName: string, value: string) {
-  return (card[filterName as keyof CardLorcana] as string).toLowerCase() === value.toLowerCase()
-}
 </script>
