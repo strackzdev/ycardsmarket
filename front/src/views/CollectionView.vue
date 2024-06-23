@@ -18,14 +18,14 @@
 </template>
 
 <script setup lang="ts">
-import type { CardLorcana } from '@/components/card/CardInterface';
-import CardLorcanaComponent from '@/components/card/CardLorcanaComponent.vue';
+import type { Card } from '@/components/card/CardInterface'; 
+import CardLorcanaComponent from '@/components/card/lorcana/CardLorcanaComponent.vue';
 import InfiniteScrollingComponent from '@/components/utils/InfiniteScrollingComponent.vue';
 import SearchBarComponent from '@/components/utils/SearchBarComponent.vue';
 import FilterDropdownComponent, { type Filter } from '@/components/utils/FilterDropdownComponent.vue';
 import axios, { type AxiosResponse } from 'axios';
 import { onMounted, ref, type Ref } from 'vue';
-import { CardLorcanaType, CardLorcanaSet, CardLorcanaRarity, CardLorcanaProperty } from '@/components/card/CardLorcanaEnum';
+import { CardLorcanaType, CardLorcanaSet, CardLorcanaRarity, CardLorcanaProperty } from '@/components/card/lorcana/CardLorcanaEnum';
 import type { Page } from '@/types/page';
 
 // Consts
@@ -36,7 +36,7 @@ let pageIndex = 0;
 let totalPages = 0;
 
 // Refs
-const cards = ref<CardLorcana[]>([]);
+const cards = ref<Card[]>([]);
 const filters = ref<Filter[]>([]);
 
 const searchValue: Ref<string | undefined> = ref();
@@ -51,7 +51,7 @@ onMounted(async () => {
 })
 
 // Functions
-async function getCards(pageSize: number, filters?: Filter[], pageIndex?: number, search?: string): Promise<AxiosResponse<Page<CardLorcana>, any>> {
+async function getCards(pageSize: number, filters?: Filter[], pageIndex?: number, search?: string): Promise<AxiosResponse<Page<Card>, any>> {
   let params = "";
 
   if(filters) {
@@ -68,7 +68,7 @@ async function getCards(pageSize: number, filters?: Filter[], pageIndex?: number
     params += `&pageIndex=${pageIndex}`;
   }
 
-  const res = await axios.get<Page<CardLorcana>>(`${import.meta.env.VITE_BACKEND_PROXY}/cards?sortDirection=ASC&sortBy=name&pageSize=${pageSize}${params}`)
+  const res = await axios.get<Page<Card>>(`${import.meta.env.VITE_BACKEND_PROXY}/cards?sortDirection=ASC&sortBy=name&pageSize=${pageSize}${params}`)
   totalPages = res.data.totalPages;
 
   return res;

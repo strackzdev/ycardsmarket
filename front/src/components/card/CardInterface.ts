@@ -1,4 +1,4 @@
-interface CardGame {
+export interface CardGame {
   id: string;
   label: string;
   description: string;
@@ -6,7 +6,7 @@ interface CardGame {
   updatedAt: string;
 }
 
-export interface CardLorcana {
+export interface Card {
   id: string;
   attributes: string;
   name: string;

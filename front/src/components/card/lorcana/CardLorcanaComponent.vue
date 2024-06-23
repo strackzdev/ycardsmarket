@@ -11,11 +11,11 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { type CardLorcana } from './CardInterface'
+import { type Card } from '../CardInterface';
 import { CardLorcanaType } from './CardLorcanaEnum'
 
 // Props
-const props = defineProps<{ card: CardLorcana }>()
+const props = defineProps<{ card: Card }>()
 
 // Refs
 const isRotated = ref(false)
