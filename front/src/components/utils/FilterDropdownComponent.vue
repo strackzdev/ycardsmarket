@@ -1,13 +1,12 @@
 <template>
   <select class="px-4 h-7 md:h-14 navy-blue italic border-2 barbel-blue-border barbel-blue-bg-lighter-hover bg-white" @change="updateSelect">
-    <option value="">{{ defaultValue }}</option>
+    <option value="">{{ props.filterName }}</option>
     <option disabled>──────────</option>
-    <option v-for="[key, value] in cardLorcanaTypes" :key="key" :value="value">{{ value }}</option>
+    <option v-for="[key, value] in options" :key="key" :value="value">{{ value }}</option>
   </select>
 </template>
 
 <script setup lang="ts">
-import {CardLorcanaSet, CardLorcanaType, CardLorcanaRarity, CardLorcanaProperty} from '@/components/card/CardLorcanaEnum'
 import { computed } from 'vue';
 
 // Type
@@ -16,18 +15,20 @@ export interface Filter {
   value: string
 }
 
-// Props
-const props = defineProps<{
+interface Options {
   filterName: string,
-  filterBy: typeof CardLorcanaType | typeof CardLorcanaSet | typeof CardLorcanaRarity
-}>()
+  /**
+   * Enum type
+   */
+  filterBy: {[key: string]: string}
+}
+
+// Props
+const props = defineProps<Options>()
 
 // Computeds
-const cardLorcanaTypes = computed(() => {
+const options = computed(() => {
   return Object.entries(props.filterBy);
-})
-const defaultValue = computed(() => {
-  return CardLorcanaProperty[(props.filterName.toUpperCase() as keyof typeof CardLorcanaProperty)]
 })
 
 // Emits
