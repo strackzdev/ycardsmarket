@@ -5,9 +5,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 interface IntersectionOptions {
-  root: Element | null
-  rootMargin: string
-  threshold: number
+  root?: Element | null
+  rootMargin?: string
+  threshold?: number
 }
 
 // Props
