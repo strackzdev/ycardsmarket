@@ -15,7 +15,7 @@ export interface Filter {
   value: string
 }
 
-interface Options {
+export interface FilterOption {
   filterName: string,
   /**
    * Enum type
@@ -24,7 +24,7 @@ interface Options {
 }
 
 // Props
-const props = defineProps<Options>()
+const props = defineProps<FilterOption>()
 
 // Computeds
 const options = computed(() => {

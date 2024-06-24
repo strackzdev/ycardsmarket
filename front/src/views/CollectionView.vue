@@ -5,9 +5,7 @@
     <SearchBarComponent class="mb-5 px-2 md:px-0" @search="getSearchValue" />
     <div class="flex flex-col md:flex-row">
       <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="cardGame" :filter-by="Game" @filter="getGameValue"/>
-      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="set_name" :filter-by="CardLorcanaSet" @filter="getFilterValue"/>
-      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="type" :filter-by="CardLorcanaType" @filter="getFilterValue"/>
-      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="rarity" :filter-by="CardLorcanaRarity" @filter="getFilterValue"/>
+      <FilterDropdownComponent v-for="filterCommon in filtersCommon" class="ml-2 md:ml-0 mr-2 mt-2" :filter-name="filterCommon.filterName" :filter-by="filterCommon.filterBy" @filter="getFilterValue"/>
     </div>
   </div>
   <div class="min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8">
@@ -26,12 +24,13 @@ import SearchBarComponent from '@/components/utils/SearchBarComponent.vue';
 import FilterDropdownComponent, { type Filter } from '@/components/utils/FilterDropdownComponent.vue';
 import axios, { type AxiosResponse } from 'axios';
 import { ref, type Ref } from 'vue';
-import { CardLorcanaType, CardLorcanaSet, CardLorcanaRarity } from '@/components/card/lorcana/CardLorcanaEnum';
+import { cardLorcanaMappingProperties } from '@/components/card/lorcana/CardLorcanaEnum';
 import { CardProperty, Game } from '@/components/card/CardEnum';
 import type { Page } from '@/types/page';
+import type { FilterOption } from '../components/utils/FilterDropdownComponent.vue';
 
 // Consts
-const quantityOfCardToAdd = 20;
+const pageSize = 20;
 
 // Variables
 let pageIndex = 0;
@@ -40,6 +39,12 @@ let totalPages = 0;
 // Refs
 const cards = ref<Card[]>([]);
 const filters = ref<Filter[]>([]);
+
+const filtersCommon = ref<FilterOption[]>([
+  {filterName: 'set_name', filterBy: {}},
+  {filterName: 'type', filterBy: {}},
+  {filterName: 'rarity', filterBy: {}},
+]);
 
 const gameValue: Ref<string> = ref('');
 const searchValue: Ref<string | undefined> = ref();
@@ -77,7 +82,7 @@ async function intersected(): Promise<void> {
 
     cards.value = [
       ...cards.value,
-      ...(await getCards(quantityOfCardToAdd, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items
+      ...(await getCards(pageSize, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items
     ];
   }
 }
@@ -87,7 +92,7 @@ async function getSearchValue(filter: Filter): Promise<void> {
 
   if(filter.value && gameValue.value) {
     pageIndex = 0;
-    cards.value = [...(await getCards(quantityOfCardToAdd, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
+    cards.value = [...(await getCards(pageSize, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
   }
 }
 
@@ -121,7 +126,7 @@ async function getFilterValue(filter: Filter): Promise<void> {
 
   findAndReplaceOrPush(filters.value, filter)
   pageIndex = 0;
-  cards.value = [...(await getCards(quantityOfCardToAdd, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
+  cards.value = [...(await getCards(pageSize, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
 }
 
 async function getGameValue(filter: Filter): Promise<void> {
@@ -131,8 +136,21 @@ async function getGameValue(filter: Filter): Promise<void> {
   searchValue.value = '';
 
   if(filter.value) {
-    cards.value = [...(await getCards(quantityOfCardToAdd, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
+    filtersCommon.value.length = 0;
+
+    switch(filter.value) {
+      case 'LORCANA':
+      for (const [key, value] of Object.entries(cardLorcanaMappingProperties)) {
+        filtersCommon.value.push({ filterName: key, filterBy: value }) 
+      }
+        break;
+    }
+
+    cards.value = [...(await getCards(pageSize, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
   } else {
+    filtersCommon.value.map((element) => {
+      return element.filterBy = {};
+    })
     cards.value.length = 0;
   }
 }
