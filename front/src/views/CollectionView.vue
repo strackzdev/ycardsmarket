@@ -84,8 +84,11 @@ async function intersected(): Promise<void> {
 
 async function getSearchValue(filter: Filter): Promise<void> {
   searchValue.value = filter.value;
-  pageIndex = 0;
-  cards.value = [...(await getCards(quantityOfCardToAdd, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
+
+  if(filter.value && gameValue.value) {
+    pageIndex = 0;
+    cards.value = [...(await getCards(quantityOfCardToAdd, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
+  }
 }
 
 function findAndReplaceOrPush(arr: Filter[], target: Filter): Filter[] {
