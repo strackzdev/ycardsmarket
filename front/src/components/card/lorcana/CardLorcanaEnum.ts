@@ -7,7 +7,7 @@ export enum CardLorcanaType {
 }
 
 export enum CardLorcanaRarity {
-    COMMUON="Common",
+    COMMON="Common",
     UNCOMMON="Uncommon",
     RARE="Rare",
     SUPER_RARE="Super Rare",
