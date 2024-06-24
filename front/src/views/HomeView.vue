@@ -29,12 +29,15 @@
       />
     </div>
   </div>
+  <trading/>
+  <trading/>
 </template>
 
 <script setup lang="ts">
 import {reactive} from 'vue';
 import Button from '@/components/homePage/Buttons.vue';
 import overallCards from '@/components/homePage/OverallCategoCards.vue';
+import Trading from "@/components/trading/trading.vue";
 
 const cards = reactive([
   {title: 'LORCANA', redirectUrl: 'https://example.com/1'},
