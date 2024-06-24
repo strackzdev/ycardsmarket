@@ -20,9 +20,3 @@ export enum CardLorcanaSet {
     RISE_OF_THE_FLOODBORN="Rise of the Floodborn",
     URSULAS_RETURN="Ursula's Return"
 }
-
-export enum CardLorcanaProperty {
-    TYPE="type",
-    RARITY="rarity",
-    SET_NAME="setName"
-}

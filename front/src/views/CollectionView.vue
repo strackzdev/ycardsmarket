@@ -4,6 +4,7 @@
 
     <SearchBarComponent class="mb-5 px-2 md:px-0" @search="getSearchValue" />
     <div class="flex flex-col md:flex-row">
+      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="cardGame" :filter-by="Game" @filter="getGameValue"/>
       <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="set_name" :filter-by="CardLorcanaSet" @filter="getFilterValue"/>
       <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="type" :filter-by="CardLorcanaType" @filter="getFilterValue"/>
       <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="rarity" :filter-by="CardLorcanaRarity" @filter="getFilterValue"/>
@@ -24,8 +25,9 @@ import InfiniteScrollingComponent from '@/components/utils/InfiniteScrollingComp
 import SearchBarComponent from '@/components/utils/SearchBarComponent.vue';
 import FilterDropdownComponent, { type Filter } from '@/components/utils/FilterDropdownComponent.vue';
 import axios, { type AxiosResponse } from 'axios';
-import { onMounted, ref, type Ref } from 'vue';
-import { CardLorcanaType, CardLorcanaSet, CardLorcanaRarity, CardLorcanaProperty } from '@/components/card/lorcana/CardLorcanaEnum';
+import { ref, type Ref } from 'vue';
+import { CardLorcanaType, CardLorcanaSet, CardLorcanaRarity } from '@/components/card/lorcana/CardLorcanaEnum';
+import { CardProperty, Game } from '@/components/card/CardEnum';
 import type { Page } from '@/types/page';
 
 // Consts
@@ -39,24 +41,19 @@ let totalPages = 0;
 const cards = ref<Card[]>([]);
 const filters = ref<Filter[]>([]);
 
+const gameValue: Ref<string> = ref('');
 const searchValue: Ref<string | undefined> = ref();
 const filterSet: Ref<string | undefined> = ref();
 const filterType: Ref<string | undefined> = ref();
 const filterRarity: Ref<string | undefined> = ref();
 
-// Hooks
-onMounted(async () => {
-  const cardRetrieved = await getCards(quantityOfCardToAdd)
-  cards.value = [...cardRetrieved.data.items];
-})
-
 // Functions
-async function getCards(pageSize: number, filters?: Filter[], pageIndex?: number, search?: string): Promise<AxiosResponse<Page<Card>, any>> {
+async function getCards(pageSize: number, game: string, filters?: Filter[], pageIndex?: number, search?: string): Promise<AxiosResponse<Page<Card>, any>> {
   let params = "";
 
   if(filters) {
     filters.forEach(filter => {
-      params += `&${CardLorcanaProperty[filter.filterName.toUpperCase() as keyof typeof CardLorcanaProperty]}=${filter.value}`;
+      params += `&${CardProperty[filter.filterName.toUpperCase() as keyof typeof CardProperty]}=${filter.value}`;
     })
   }
 
@@ -68,19 +65,19 @@ async function getCards(pageSize: number, filters?: Filter[], pageIndex?: number
     params += `&pageIndex=${pageIndex}`;
   }
 
-  const res = await axios.get<Page<Card>>(`${import.meta.env.VITE_BACKEND_PROXY}/cards?sortDirection=ASC&sortBy=name&pageSize=${pageSize}${params}`)
+  const res = await axios.get<Page<Card>>(`${import.meta.env.VITE_BACKEND_PROXY}/cards?sortDirection=ASC&sortBy=name&pageSize=${pageSize}&cardGame=${game}${params}`)
   totalPages = res.data.totalPages;
 
   return res;
 }
 
 async function intersected(): Promise<void> {
-  if(pageIndex < totalPages) {
+  if(pageIndex < totalPages && cards.value.length != 0) {
     pageIndex++;
 
     cards.value = [
       ...cards.value,
-      ...(await getCards(quantityOfCardToAdd, filters.value, pageIndex, searchValue.value)).data.items
+      ...(await getCards(quantityOfCardToAdd, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items
     ];
   }
 }
@@ -88,7 +85,7 @@ async function intersected(): Promise<void> {
 async function getSearchValue(filter: Filter): Promise<void> {
   searchValue.value = filter.value;
   pageIndex = 0;
-  cards.value = [...(await getCards(quantityOfCardToAdd, filters.value, pageIndex, searchValue.value)).data.items]
+  cards.value = [...(await getCards(quantityOfCardToAdd, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
 }
 
 function findAndReplaceOrPush(arr: Filter[], target: Filter): Filter[] {
@@ -121,6 +118,19 @@ async function getFilterValue(filter: Filter): Promise<void> {
 
   findAndReplaceOrPush(filters.value, filter)
   pageIndex = 0;
-  cards.value = [...(await getCards(quantityOfCardToAdd, filters.value, pageIndex, searchValue.value)).data.items]
+  cards.value = [...(await getCards(quantityOfCardToAdd, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
+}
+
+async function getGameValue(filter: Filter): Promise<void> {
+  gameValue.value = filter.value;
+  pageIndex = 0;
+  filters.value = [];
+  searchValue.value = '';
+
+  if(filter.value) {
+    cards.value = [...(await getCards(quantityOfCardToAdd, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
+  } else {
+    cards.value.length = 0;
+  }
 }
 </script>
