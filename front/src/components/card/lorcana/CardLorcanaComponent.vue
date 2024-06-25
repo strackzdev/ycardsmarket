@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { type Card } from '../CardInterface';
-import { CardLorcanaType } from './CardLorcanaEnum'
+import { CardLorcanaTypeEnum } from './CardLorcanaEnum'
 
 // Props
 const props = defineProps<{ card: Card }>()
@@ -27,7 +27,7 @@ onMounted(() => {
 
 // Functions
 function doRotation() {
-  if (props.card.type === CardLorcanaType.LOCATION) {
+  if (props.card.type === CardLorcanaTypeEnum.LOCATION) {
     isRotated.value = !isRotated.value
   }
 }

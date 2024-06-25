@@ -1,4 +1,4 @@
-export enum CardLorcanaType {
+export enum CardLorcanaTypeEnum {
     ACTION="Action",
     ACTION_SONG="Action - Song",
     LOCATION="Location",
@@ -6,7 +6,7 @@ export enum CardLorcanaType {
     CHARACTER="Character"
 }
 
-export enum CardLorcanaRarity {
+export enum CardLorcanaRarityEnum {
     COMMON="Common",
     UNCOMMON="Uncommon",
     RARE="Rare",
@@ -14,15 +14,15 @@ export enum CardLorcanaRarity {
     LEGENDARY="Legendary"
 }
 
-export enum CardLorcanaSet {
+export enum CardLorcanaSetEnum {
     INTO_THE_INKLANDS="Into the Inklands",
     THE_FIRST_CHAPTER="The First Chapter",
     RISE_OF_THE_FLOODBORN="Rise of the Floodborn",
     URSULAS_RETURN="Ursula's Return"
 }
 
-export const cardLorcanaMappingProperties = {
-    "set_name": CardLorcanaSet,
-    "type": CardLorcanaType,
-    "rarity": CardLorcanaRarity
+export const cardMappingProperties = {
+    "set_name": CardLorcanaSetEnum,
+    "type": CardLorcanaTypeEnum,
+    "rarity": CardLorcanaRarityEnum
 }

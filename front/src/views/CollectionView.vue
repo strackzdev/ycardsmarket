@@ -4,7 +4,7 @@
 
     <SearchBarComponent class="mb-5 px-2 md:px-0" @search="getSearchValue" />
     <div class="flex flex-col md:flex-row">
-      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="cardGame" :filter-by="Game" @filter="getGameValue"/>
+      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="cardGame" :filter-by="GameLabelEnum" @filter="getGameValue"/>
       <FilterDropdownComponent v-for="filterCommon in filtersCommon" class="ml-2 md:ml-0 mr-2 mt-2" :filter-name="filterCommon.filterName" :filter-by="filterCommon.filterBy" @filter="getFilterValue"/>
     </div>
   </div>
@@ -24,8 +24,8 @@ import SearchBarComponent from '@/components/utils/SearchBarComponent.vue';
 import FilterDropdownComponent, { type Filter } from '@/components/utils/FilterDropdownComponent.vue';
 import axios, { type AxiosResponse } from 'axios';
 import { ref, type Ref } from 'vue';
-import { cardLorcanaMappingProperties } from '@/components/card/lorcana/CardLorcanaEnum';
-import { CardProperty, Game } from '@/components/card/CardEnum';
+import { cardMappingProperties } from '@/components/card/lorcana/CardLorcanaEnum';
+import { CardCommonPropertyEnum, GameLabelEnum } from '@/components/card/CardEnum';
 import type { Page } from '@/types/page';
 import type { FilterOption } from '../components/utils/FilterDropdownComponent.vue';
 
@@ -58,7 +58,7 @@ async function getCards(pageSize: number, game: string, filters?: Filter[], page
 
   if(filters) {
     filters.forEach(filter => {
-      params += `&${CardProperty[filter.filterName.toUpperCase() as keyof typeof CardProperty]}=${filter.value}`;
+      params += `&${CardCommonPropertyEnum[filter.filterName.toUpperCase() as keyof typeof CardCommonPropertyEnum]}=${filter.value}`;
     })
   }
 
@@ -140,7 +140,7 @@ async function getGameValue(filter: Filter): Promise<void> {
 
     switch(filter.value) {
       case 'LORCANA':
-      for (const [key, value] of Object.entries(cardLorcanaMappingProperties)) {
+      for (const [key, value] of Object.entries(cardMappingProperties)) {
         filtersCommon.value.push({ filterName: key, filterBy: value }) 
       }
         break;

@@ -1,12 +1,12 @@
-export interface CardGame {
+import type { BaseEntity } from "@/types/baseEntity";
+
+export interface CardGame extends BaseEntity {
   id: string;
   label: string;
   description: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
-export interface Card {
+export interface Card extends BaseEntity {
   id: string;
   attributes: string;
   name: string;
@@ -15,6 +15,4 @@ export interface Card {
   type: string;
   rarity: string;
   cardGame: CardGame;
-  createdAt: string;
-  updatedAt: string;
 }

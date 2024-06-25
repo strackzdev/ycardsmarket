@@ -1,8 +1,8 @@
-export enum Game {
+export enum GameLabelEnum {
     LORCANA="LORCANA"
 }
 
-export enum CardProperty {
+export enum CardCommonPropertyEnum {
     TYPE="type",
     RARITY="rarity",
     SET_NAME="setName"
