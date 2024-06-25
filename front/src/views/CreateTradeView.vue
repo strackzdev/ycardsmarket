@@ -42,7 +42,6 @@
                 +
               </span>
               {{ item.quantity}}
-              {{console.log(JSON.parse(item.card.attributes).Color)}}
               <span class="cursor-pointer rounded-full border-2 font-bold uppercase border-white flex justify-center items-center w-6 h-6" @click="decrementCardFromLookingFor(item.card)">
                 -
               </span>
@@ -211,42 +210,49 @@ function decrementCardFromOffer(card: Card) {
   }).filter(cardQuantity => cardQuantity.quantity > 0)
 }
 
-function handleSubmit() {
-  if(!selectedOption.value) return alert('Please select a delivery method')
+async function handleSubmit() {
+  if (!selectedOption.value) return alert('Please select a delivery method')
   if (lookingForCards.value.length === 0) return alert('Please select at least one card you are looking for')
   if (offerCards.value.length === 0) return alert('Please select at least one card you are offering')
 
-  const trade = {
-    "financialGarantee": financialGuarantee.value,
-    "cardGame": {
-      "id": "6f704b8b-eaf5-40d3-aeb2-5cb5348b486f"
-    },
-    "shipping": {
-      "method": selectedOption.value?.value,
-    },
-    "acceptorCards": lookingForCards.value.map(cardQuantity => {
-      return {
-        "card": {
-          "id": cardQuantity.card.id
-        },
-        "quantity": cardQuantity.quantity
-      }
-    }),
-    "proposerCards": offerCards.value.map(cardQuantity => {
-      return {
-        "card": {
-          "id": cardQuantity.card.id
-        },
-        "quantity": cardQuantity.quantity
-      }
-    })
-  }
-
-  axios.post(`${import.meta.env.VITE_BACKEND_PROXY}/trades`, trade)
+  await axios.get(`${import.meta.env.VITE_BACKEND_PROXY}/card-games`)
     .then((res) => {
-      lookingForCards.value = []
-      offerCards.value = []
-      router.push({ name: 'trade', params: { id: res.data.id } })
+      const cardGame = res.data.find((game: any) => game.label === gameValue.value)
+      const trade = {
+        "financialGarantee": financialGuarantee.value,
+        "cardGame": {
+          "id": cardGame.id
+        },
+        "shipping": {
+          "method": selectedOption.value?.value,
+        },
+        "acceptorCards": lookingForCards.value.map(cardQuantity => {
+          return {
+            "card": {
+              "id": cardQuantity.card.id
+            },
+            "quantity": cardQuantity.quantity
+          }
+        }),
+        "proposerCards": offerCards.value.map(cardQuantity => {
+          return {
+            "card": {
+              "id": cardQuantity.card.id
+            },
+            "quantity": cardQuantity.quantity
+          }
+        })
+      }
+      axios.post(`${import.meta.env.VITE_BACKEND_PROXY}/trades`, trade)
+        .then((res) => {
+          lookingForCards.value = []
+          offerCards.value = []
+          router.push({ name: 'trade', params: { id: res.data.id } })
+        })
+        .catch(() => {
+          alert('An error occured')
+        })
+
     })
     .catch(() => {
       alert('An error occured')
