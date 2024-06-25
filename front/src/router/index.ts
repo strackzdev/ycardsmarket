@@ -4,9 +4,11 @@ import DecksView from '@/views/DecksView.vue'
 import DeckBuilderView from '@/views/DeckBuilderView.vue'
 import CollectionView from '@/views/CollectionView.vue'
 import TradingView from '@/views/TradingView.vue'
+import CreateTradeView from '@/views/CreateTradeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import MainLayout from '@/layout/MainLayout.vue'
 import { isAuthenticated } from '@/auth/auth'
+import TradeView from '@/views/TradeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,7 +53,19 @@ const router = createRouter({
           path: '/trading',
           name: 'trading',
           component: TradingView,
-          beforeEnter: [redirectToLogin]
+          // beforeEnter: [redirectToLogin]
+        },
+        {
+          path: '/trading/create',
+          name: 'create-trade',
+          component: CreateTradeView,
+          // beforeEnter: [redirectToLogin]
+        },
+        {
+          path: '/trading/:id',
+          name: 'trade',
+          component: TradeView,
+          // beforeEnter: [redirectToLogin]
         }
       ]
     }
