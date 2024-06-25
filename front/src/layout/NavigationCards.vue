@@ -5,7 +5,8 @@
           v-for="(item, index) in menuItems"
           :key="index"
           :to="item.path"
-          class="fan">
+          class="fan"
+      >
         <div class="card" :data-word="item.label">
           <img :src="item.imageUrl" :alt="item.label" class="menu-img" />
         </div>
@@ -14,15 +15,19 @@
   </div>
 </template>
 
-<script setup lang="ts">
-
-const menuItems = [
-  { label: 'Deck', path: { name: 'decks' }, imageUrl: new URL('@/assets/images/yugiohNavCard.png', import.meta.url).href },
-  { label: 'Trading', path: { name: 'trading' }, imageUrl: new URL('@/assets/images/pokemonNavCard.png', import.meta.url).href },
-  { label: 'Cards', path: { name: 'collection' }, imageUrl: new URL('@/assets/images/lorcanaNavCard.png', import.meta.url).href },
-  { label: 'Home', path: '/', imageUrl: new URL('@/assets/images/magicNavCard.png', import.meta.url).href },
-]
-
+<script lang="ts">
+export default {
+  data() {
+    return {
+      menuItems: [
+        { label: 'Deck', path: { name: 'decks' }, imageUrl: 'src/assets/images/yugiohNavCard.png' },
+        { label: 'Trading', path: { name: 'trading' }, imageUrl: 'src/assets/images/pokemonNavCard.png' },
+        { label: 'Cards', path: { name: 'collection' }, imageUrl: 'src/assets/images/lorcanaNavCard.png' },
+        { label: 'Home', path: '/', imageUrl: 'src/assets/images/magicNavCard.png' }
+      ]
+    };
+  }
+};
 </script>
 
 <style scoped>

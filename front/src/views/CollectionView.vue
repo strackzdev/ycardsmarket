@@ -5,7 +5,7 @@
     <SearchBarComponent class="mb-5 px-2 md:px-0" @search="getSearchValue" />
     <div class="flex flex-col md:flex-row">
       <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="cardGame" :filter-by="GameLabelEnum" @filter="getGameValue"/>
-      <FilterDropdownComponent v-for="filterCommon in filtersCommon" v-bind:key="filterCommon.filterName" class="ml-2 md:ml-0 mr-2 mt-2" :filter-name="filterCommon.filterName" :filter-by="filterCommon.filterBy" @filter="getFilterValue"  />
+      <FilterDropdownComponent v-for="filterCommon in filtersCommon" class="ml-2 md:ml-0 mr-2 mt-2" :filter-name="filterCommon.filterName" :filter-by="filterCommon.filterBy" @filter="getFilterValue"/>
     </div>
   </div>
   <div class="min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8">
