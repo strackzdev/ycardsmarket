@@ -18,13 +18,24 @@ body {
   color: #555C93;
 }
 
+.barbel-blue-bg {
+  background-color: #555C93;
+}
+
 .barbel-blue-border {
   border-color: #555C93;
 }
 
+.barbel-blue-bg-darker-hover:hover {
+  background-color: #444477;
+}
+
+.barbel-blue-bg-lighter-hover:hover {
+  background-color: #c7cee6;
+}
+
 select:focus {
-  border-color: #1A1E3E;
-  border-width: 3px;
+  background-color: #c7cee6;
 }
 
 select {
@@ -35,5 +46,4 @@ select {
   appearance: none !important;
   cursor: pointer;
   width: auto;
-  border-radius: 9999px;
 }

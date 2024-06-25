@@ -3,7 +3,7 @@
     <img
       class="rounded-2xl w-fit"
       :class="[isRotated ? 'rotate-90 aspect-square scale-x-75' : '']"
-      :src="props.card.image_url"
+      :src="props.card.imageUrl"
       alt=""
     />
   </div>
@@ -11,11 +11,11 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { type CardLorcana } from './CardInterface'
-import { CardLorcanaType } from './CardLorcanaEnum'
+import { type Card } from '../CardInterface';
+import { CardLorcanaTypeEnum } from './CardLorcanaEnum'
 
 // Props
-const props = defineProps<{ card: CardLorcana }>()
+const props = defineProps<{ card: Card }>()
 
 // Refs
 const isRotated = ref(false)
@@ -27,7 +27,7 @@ onMounted(() => {
 
 // Functions
 function doRotation() {
-  if (props.card.type === CardLorcanaType.LOCATION) {
+  if (props.card.type === CardLorcanaTypeEnum.LOCATION) {
     isRotated.value = !isRotated.value
   }
 }

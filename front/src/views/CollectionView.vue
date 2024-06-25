@@ -4,82 +4,114 @@
 
     <SearchBarComponent class="mb-5 px-2 md:px-0" @search="getSearchValue" />
     <div class="flex flex-col md:flex-row">
-      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="set_name" :filter-by="CardLorcanaSet" @filter="getFilterValue"/>
-      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="type" :filter-by="CardLorcanaType" @filter="getFilterValue"/>
-      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="rarity" :filter-by="CardLorcanaRarity" @filter="getFilterValue"/>
+      <FilterDropdownComponent class="ml-2 md:ml-0 mr-2 mt-2" filter-name="cardGame" :filter-by="GameLabelEnum" @filter="getGameValue"/>
+      <FilterDropdownComponent v-for="filterCommon in filtersCommon" class="ml-2 md:ml-0 mr-2 mt-2" :filter-name="filterCommon.filterName" :filter-by="filterCommon.filterBy" @filter="getFilterValue"/>
     </div>
   </div>
   <div class="min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8">
     <div class="px-4 md:max-w-full m-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-16">
-      <CardLorcanaComponent v-for="card in cardsDisplayed" :key="card.id" :card=card />
-      <InfiniteScrollingComponent @intersect="intersected"/>
+      <CardLorcanaComponent v-for="card in cards" :key="card.id" :card=card />
+      <InfiniteScrollingComponent rootMargin="500px" @intersect="intersected"/>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { CardLorcana } from '@/components/card/CardInterface';
-import CardLorcanaComponent from '@/components/card/CardLorcanaComponent.vue';
+import type { Card } from '@/components/card/CardInterface'; 
+import CardLorcanaComponent from '@/components/card/lorcana/CardLorcanaComponent.vue';
 import InfiniteScrollingComponent from '@/components/utils/InfiniteScrollingComponent.vue';
 import SearchBarComponent from '@/components/utils/SearchBarComponent.vue';
-import FilterDropdownComponent from '@/components/utils/FilterDropdownComponent.vue';
-import axios from 'axios';
-import { onMounted, ref, type Ref } from 'vue';
-import { CardLorcanaType, CardLorcanaSet, CardLorcanaRarity } from '@/components/card/CardLorcanaEnum';
-
-// Type
-export interface Filter {
-  filterName: string,
-  value: string
-}
+import FilterDropdownComponent, { type Filter } from '@/components/utils/FilterDropdownComponent.vue';
+import axios, { type AxiosResponse } from 'axios';
+import { ref, type Ref } from 'vue';
+import { cardMappingProperties } from '@/components/card/lorcana/CardLorcanaEnum';
+import { CardCommonPropertyEnum, GameLabelEnum } from '@/components/card/CardEnum';
+import type { Page } from '@/types/page';
+import type { FilterOption } from '../components/utils/FilterDropdownComponent.vue';
 
 // Consts
-const quantityOfCardToAdd = 20;
+const pageSize = 20;
 
 // Variables
-let cards: CardLorcana[] = [];
+let pageIndex = 0;
+let totalPages = 0;
 
 // Refs
-const cardsDisplayed: Ref<CardLorcana[]> = ref([]);
-const cardsRemainingToDisplay: Ref<CardLorcana[]> = ref([]);
+const cards = ref<Card[]>([]);
+const filters = ref<Filter[]>([]);
 
+const filtersCommon = ref<FilterOption[]>([
+  {filterName: 'set_name', filterBy: {}},
+  {filterName: 'type', filterBy: {}},
+  {filterName: 'rarity', filterBy: {}},
+]);
+
+const gameValue: Ref<string> = ref('');
 const searchValue: Ref<string | undefined> = ref();
 const filterSet: Ref<string | undefined> = ref();
 const filterType: Ref<string | undefined> = ref();
 const filterRarity: Ref<string | undefined> = ref();
 
-// Hooks
-onMounted(async() => {
-  cards.push(...await getCards());
-  cardsRemainingToDisplay.value = [...cards]
-
-  getCardsByQuantity(quantityOfCardToAdd);
-})
-
 // Functions
-async function getCards(): Promise<CardLorcana[]> {
-  return (await axios.get('https://ycardsmarket.onrender.com/api/v1/lorcana/?format=json')).data;
+async function getCards(pageSize: number, game: string, filters?: Filter[], pageIndex?: number, search?: string): Promise<AxiosResponse<Page<Card>, any>> {
+  let params = "";
+
+  if(filters) {
+    filters.forEach(filter => {
+      params += `&${CardCommonPropertyEnum[filter.filterName.toUpperCase() as keyof typeof CardCommonPropertyEnum]}=${filter.value}`;
+    })
+  }
+
+  if(search) {
+    params += `&name=${search}`
+  }
+
+  if(pageIndex) {
+    params += `&pageIndex=${pageIndex}`;
+  }
+
+  const res = await axios.get<Page<Card>>(`${import.meta.env.VITE_BACKEND_PROXY}/cards?sortDirection=ASC&sortBy=name&pageSize=${pageSize}&cardGame=${game}${params}`)
+  totalPages = res.data.totalPages;
+
+  return res;
 }
 
-function getCardsByQuantity(quantity: number): void { 
-  cardsDisplayed.value.push(...cardsRemainingToDisplay.value.splice(0, quantity));
+async function intersected(): Promise<void> {
+  if(pageIndex < totalPages && cards.value.length != 0) {
+    pageIndex++;
+
+    cards.value = [
+      ...cards.value,
+      ...(await getCards(pageSize, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items
+    ];
+  }
 }
 
-function resetCardsDisplayed() {
-  cardsDisplayed.value = []
-}
-
-async function intersected() {
-  getCardsByQuantity(quantityOfCardToAdd);
-}
-
-function getSearchValue(filter: Filter) {
+async function getSearchValue(filter: Filter): Promise<void> {
   searchValue.value = filter.value;
 
-  refreshCards();
+  if(filter.value && gameValue.value) {
+    pageIndex = 0;
+    cards.value = [...(await getCards(pageSize, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
+  }
 }
 
-function getFilterValue(filter: Filter) { 
+function findAndReplaceOrPush(arr: Filter[], target: Filter): Filter[] {
+  if (arr.some((element, index) => {
+    if (element.filterName === target.filterName) {
+      target.value ? arr[index] = target : arr.splice(index, 1)
+      return true;
+    }
+    return false;
+  })) {
+    return arr;
+  } else {
+    arr.push(target);
+    return arr;
+  }
+}
+
+async function getFilterValue(filter: Filter): Promise<void> {
   switch(filter.filterName) {
     case 'set_name':
     filterSet.value = filter.value;
@@ -92,42 +124,34 @@ function getFilterValue(filter: Filter) {
       break;
   }
 
-  refreshCards();
+  findAndReplaceOrPush(filters.value, filter)
+  pageIndex = 0;
+  cards.value = [...(await getCards(pageSize, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
 }
 
-function refreshCards(): void {
-  let cardsCopy: CardLorcana[]  = [...cards]
+async function getGameValue(filter: Filter): Promise<void> {
+  gameValue.value = filter.value;
+  pageIndex = 0;
+  filters.value = [];
+  searchValue.value = '';
 
-  if (searchValue.value) {
-    cardsCopy = searchByName(cardsCopy, searchValue.value)
+  if(filter.value) {
+    filtersCommon.value.length = 0;
+
+    switch(filter.value) {
+      case 'LORCANA':
+      for (const [key, value] of Object.entries(cardMappingProperties)) {
+        filtersCommon.value.push({ filterName: key, filterBy: value }) 
+      }
+        break;
+    }
+
+    cards.value = [...(await getCards(pageSize, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
+  } else {
+    filtersCommon.value.map((element) => {
+      return element.filterBy = {};
+    })
+    cards.value.length = 0;
   }
-
-  if (filterSet.value) {
-    cardsCopy = filterBy(cardsCopy, 'set_name', filterSet.value)
-  }
-  if (filterType.value) {
-    cardsCopy = filterBy(cardsCopy, 'type', filterType.value)
-  }
-  if (filterRarity.value) {
-    cardsCopy = filterBy(cardsCopy, 'rarity', filterRarity.value)
-  }
-  
-  cardsRemainingToDisplay.value = cardsCopy;
-
-  resetCardsDisplayed()
-  getCardsByQuantity(quantityOfCardToAdd)
-
-}
-
-function searchByName(cards: CardLorcana[], value: string): CardLorcana[] {
-  return cards.filter(card => card.name.toLowerCase().includes(value.toLowerCase()))
-}
-
-function filterBy(cards: CardLorcana[], filterName: string, value: string) {
-  return cards.filter(card => callback(card, filterName, value))
-}
-
-function callback(card: CardLorcana, filterName: string, value: string) {
-  return (card[filterName as keyof CardLorcana] as string).toLowerCase() === value.toLowerCase()
 }
 </script>

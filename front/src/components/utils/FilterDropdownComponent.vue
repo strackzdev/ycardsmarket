@@ -1,28 +1,34 @@
 <template>
-  <select class="px-4 h-7 md:h-14 navy-blue italic border-2 barbel-blue-border bg-white" @change="updateSelect">
-    <option value="">{{ defaultValue }}</option>
-    <option disabled>──────────</option>
-    <option v-for="[key, value] in cardLorcanaTypes" :key="key" :value="value">{{ value }}</option>
+  <select class="pl-5 pr-14 h-7 md:h-14 rounded-full navy-blue border-2 barbel-blue-border barbel-blue-bg-lighter-hover bg-white" @change="updateSelect">
+    <option value="">{{ props.filterName }}</option>
+    <option disabled>──</option>
+    <option v-for="[key, value] in options" :key="key" :value="value">{{ value }}</option>
   </select>
 </template>
 
 <script setup lang="ts">
-import {CardLorcanaSet, CardLorcanaType, CardLorcanaRarity, CardLorcanaProperty} from '@/components/card/CardLorcanaEnum'
-import type { Filter } from '@/views/CollectionView.vue';
 import { computed } from 'vue';
 
-// Props
-const props = defineProps<{
+// Type
+export interface Filter {
   filterName: string,
-  filterBy: typeof CardLorcanaType | typeof CardLorcanaSet | typeof CardLorcanaRarity
-}>()
+  value: string
+}
+
+export interface FilterOption {
+  filterName: string,
+  /**
+   * Enum type
+   */
+  filterBy: {[key: string]: string}
+}
+
+// Props
+const props = defineProps<FilterOption>()
 
 // Computeds
-const cardLorcanaTypes = computed(() => {
+const options = computed(() => {
   return Object.entries(props.filterBy);
-})
-const defaultValue = computed(() => {
-  return CardLorcanaProperty[(props.filterName.toUpperCase() as keyof typeof CardLorcanaProperty)]
 })
 
 // Emits
