@@ -114,6 +114,9 @@ import { cardMappingProperties } from '@/components/card/lorcana/CardLorcanaEnum
 import { CardCommonPropertyEnum, GameLabelEnum } from '@/components/card/CardEnum';
 import type { Page } from '@/types/page';
 import type { FilterOption } from '../components/utils/FilterDropdownComponent.vue';
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 type cardQuantity = {
   card: Card,
@@ -240,10 +243,10 @@ function handleSubmit() {
   }
 
   axios.post(`${import.meta.env.VITE_BACKEND_PROXY}/trades`, trade)
-    .then(() => {
-      alert('Trade created')
+    .then((res) => {
       lookingForCards.value = []
       offerCards.value = []
+      router.push({ name: 'trade', params: { id: res.data.id } })
     })
     .catch(() => {
       alert('An error occured')
