@@ -53,19 +53,19 @@ const router = createRouter({
           path: '/trading',
           name: 'trading',
           component: TradingView,
-          // beforeEnter: [redirectToLogin]
+          beforeEnter: [redirectToLogin]
         },
         {
           path: '/trading/create',
           name: 'create-trade',
           component: CreateTradeView,
-          // beforeEnter: [redirectToLogin]
+          beforeEnter: [redirectToLogin]
         },
         {
           path: '/trading/:id',
           name: 'trade',
           component: TradeView,
-          // beforeEnter: [redirectToLogin]
+          beforeEnter: [redirectToLogin]
         }
       ]
     }
