@@ -252,6 +252,7 @@ async function handleSubmit() {
         .catch(() => {
           alert('An error occured')
         })
+
     })
     .catch(() => {
       alert('An error occured')
