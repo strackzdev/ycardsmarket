@@ -7,13 +7,13 @@
             <div class="w-1/2">
                 <div>
                 <h2 class="font-bold text-lg">Proposer tracked number</h2>
-                <p>Not yet assigned</p>
+                <p class="underline">{{ trade.shipping.proposerTrackingNumber ? trade.shipping.proposerTrackingNumber : 'Not assigned yet' }}</p>
                 </div>
             </div>
             <div class="w-1/2">
                 <div>
                 <h2 class="font-bold text-lg">Acceptor tracked number</h2>
-                <p>Not yet assigned</p>
+                <p class="underline">{{ trade.shipping.acceptorTrackingNumber ? trade.shipping.acceptorTrackingNumber : 'Not assigned yet' }}</p>
                 </div>
             </div>
             </div>
@@ -56,34 +56,33 @@
 </template>
 
 <script lang="ts" setup>
-import type { Trade } from '@/types/trade';
 import axios from 'axios';
 import { useModalStore } from '@/stores/modal';
 import { storeToRefs } from 'pinia';
 import ModalComponent from '../utils/ModalComponent.vue';
+import { useTradeStore } from '@/stores/trade';
 
 // Stores
-const store  = useModalStore();
-const { modalContent, isOpen } = storeToRefs(store);
-const { onToggle } = store
+const modalStore  = useModalStore();
+const { modalContent, isOpen } = storeToRefs(modalStore);
+const { onToggle } = modalStore;
+const tradeStore  = useTradeStore();
+const { trade } = storeToRefs(tradeStore);
 
-const props = defineProps<{trade : Trade}>();
+
 const trackedNumber = defineModel<string>('trackedNumber');
 const proposerDelivered = defineModel<string>('proposerDelivered');
 
 function updateShippingInfo(): void {
-    if (props.trade) {
-        axios.put(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${props.trade.id}`, 
-            {
-                "id": props.trade.id,
-                "method": props.trade.shipping.method,
-                "proposerTrackingNumber": trackedNumber.value,
-                "acceptorTrackingNumber": trackedNumber.value,
-                "proposerDelivered": proposerDelivered.value,
-                "acceptorDelivered": proposerDelivered.value
-            })
-    }
-
+    axios.put(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}`, 
+        {
+            "id": trade.value.id,
+            "method": trade.value.shipping.method,
+            "proposerTrackingNumber": trackedNumber.value,
+            "acceptorTrackingNumber": trackedNumber.value,
+            "proposerDelivered": proposerDelivered.value,
+            "acceptorDelivered": proposerDelivered.value
+        })
     onToggle();
 };
 

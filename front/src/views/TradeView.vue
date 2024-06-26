@@ -65,20 +65,21 @@
     </div>
   </div>
 
-  <ShippingModalComponent v-if="trade" :trade="trade"/>
+  <ShippingModalComponent/>
 </template>
 
 <script setup lang="ts">
 
 import { useRoute } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
-import axios from 'axios'
+import axios, { type AxiosResponse } from 'axios'
 import type { Card } from '@/components/card/CardInterface';
 import CardLorcanaComponent from '@/components/card/lorcana/CardLorcanaComponent.vue';
 import type { Trade } from '@/types/trade';
 import { useModalStore } from '@/stores/modal';
 import ShippingModalComponent from '@/components/trading/ShippingModalComponent.vue';
 import { storeToRefs } from 'pinia';
+import { useTradeStore } from '@/stores/trade';
 
 const route = useRoute()
 const id = computed(() => route.params.id)
@@ -87,36 +88,38 @@ const id = computed(() => route.params.id)
 const acceptorCards = ref<Card[]>([]);
 const proposerCards = ref<Card[]>([]);
 const isFinancialGaranteed = ref<boolean>(true);
-const trade = ref<Trade>();
 
 // Stores
-const store  = useModalStore();
-const { onToggle } = store
-const { modalContent } = storeToRefs(store);
+const modalStore = useModalStore();
+const { onToggle } = modalStore
+const { modalContent } = storeToRefs(modalStore);
+const tradeStore = useTradeStore();
+const { trade } = storeToRefs(tradeStore)
 
 // Hooks
 onMounted(async () => {
-  getTradeInfo();
+  trade.value = (await getTradeInfo()).data;
 })
 
 // Functions
-async function getTradeInfo(): Promise<void> {
-  const res = await axios.get<Trade>(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${id.value}`);
-  res.data.acceptorCards.forEach((element) => {
-    for(let i=0; i<element.quantity; i++) {
-      acceptorCards.value.push(element.card)
-    }
-  })
+async function getTradeInfo(): Promise<AxiosResponse<Trade, any>> {
+  return await axios.get<Trade>(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${id.value}`);
 
-  res.data.proposerCards.forEach((element) => {
-    for(let i=0; i<element.quantity; i++) {
-      proposerCards.value.push(element.card)
-    }
-  })
+  // res.data.acceptorCards.forEach((element) => {
+  //   for(let i=0; i<element.quantity; i++) {
+  //     acceptorCards.value.push(element.card)
+  //   }
+  // })
 
-  isFinancialGaranteed.value = res.data.financialGarantee;
+  // res.data.proposerCards.forEach((element) => {
+  //   for(let i=0; i<element.quantity; i++) {
+  //     proposerCards.value.push(element.card)
+  //   }
+  // })
 
-  trade.value = res.data;
+  // isFinancialGaranteed.value = res.data.financialGarantee;
+
+  // trade.value = res.data;
 }
 
 function openModal(content: string) {
