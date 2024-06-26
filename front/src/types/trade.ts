@@ -1,7 +1,7 @@
 import type { Card, CardGame } from "@/components/card/CardInterface"
 import type { BaseEntity } from "./baseEntity"
 
-interface TradeCard {
+export interface TradeCard {
     "id": string,
     "card": Card,
     "quantity": number

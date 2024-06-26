@@ -23,33 +23,32 @@
       </div>
     </div>
 
-    <div class="flex gap-36 min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8 relative">
-      <main class="mt-10 flex-1">
-        <div>
-          <div class="flex justify-between">
-            <h2 class="text-3xl text-white font-bold">OFFER CREATOR HAS</h2>
-            <h2 class="text-2xl text-white">{{ trade.acceptorCards.length }} ITEMS</h2>
-          </div>
-          <div class="flex flex-wrap gap-4 mt-5">
-            <div v-for="tradeCard in trade.acceptorCards" :key="tradeCard.id">
-              <CardLorcanaComponent class="w-56" :card=tradeCard.card />
-            </div>
+    <div class="flex justify-between min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8 relative">
+      <main class="mt-10 w-3/5">
+        <div class="flex justify-between">
+          <h2 class="text-3xl text-white font-bold">OFFER CREATOR HAS</h2>
+          <h2 class="text-2xl text-white">{{ trade.proposerCards.length }} ITEMS</h2>
+        </div>
+        <div class="flex flex-wrap gap-6 justify-between mt-5">
+          <div class="flex gap-4" v-for="card in proposerCards" :key="card.id">
+            <CardLorcanaComponent class="w-56" :card=card />
           </div>
         </div>
+
         <div class="mt-20">
           <div class="flex justify-between">
             <h2 class="text-3xl text-white font-bold">LOOKING FOR</h2>
-            <h2 class="text-2xl text-white">{{ trade.proposerCards.length }} ITEMS</h2>
+            <h2 class="text-2xl text-white">{{ trade.acceptorCards.length }} ITEMS</h2>
           </div>
-          <div class="flex flex-wrap justify-between gap-4 mt-5">
-            <div v-for="tradeCard in trade.proposerCards" :key="tradeCard.id">
-              <CardLorcanaComponent class="w-56" :card=tradeCard.card />
+          <div class="flex flex-wrap gap-4 mt-5">
+            <div class="flex gap-4" v-for="card in acceptorCards" :key="card.id">
+              <CardLorcanaComponent class="w-56" :card=card />
             </div>
           </div>
         </div>
       </main>
 
-      <aside class="h-fit px-6 py-4 sticky top-8">
+      <aside class="h-fit py-4 sticky top-8 right-0">
         <div class="flex gap-4">
           <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full" @click="openModal('info')">
             SHIPPING INFO
@@ -58,7 +57,7 @@
             SHIPPING UPDATE
           </button>
         </div>
-        <div class="mt-4 bg-white h-96 flex items-center justify-center">
+        <div class="flex items-center justify-center h-96 mt-4 p-10 bg-white">
           <h2 class="text-base mt-4">Once the offer is accepted, the chat will become available !</h2>
         </div>
       </aside>
@@ -74,17 +73,20 @@ import { useRoute } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
 import axios, { type AxiosResponse } from 'axios'
 import CardLorcanaComponent from '@/components/card/lorcana/CardLorcanaComponent.vue';
-import type { Trade } from '@/types/trade';
+import type { Trade, TradeCard } from '@/types/trade';
 import { useModalStore } from '@/stores/modal';
 import ShippingModalComponent from '@/components/trading/ShippingModalComponent.vue';
 import { storeToRefs } from 'pinia';
 import { useTradeStore } from '@/stores/trade';
+import type { Card } from '@/components/card/CardInterface';
 
 const route = useRoute()
 const id = computed(() => route.params.id)
 
 // Refs
 const isFinancialGaranteed = ref<boolean>(true);
+const proposerCards = ref<Card[]>([]);
+const acceptorCards = ref<Card[]>([]);
 
 // Stores
 const modalStore = useModalStore();
@@ -96,27 +98,30 @@ const { trade } = storeToRefs(tradeStore)
 // Hooks
 onMounted(async () => {
   trade.value = (await getTradeInfo()).data;
+  
+  getProposerCards();
+  getAcceptorCards();
 })
 
 // Functions
 async function getTradeInfo(): Promise<AxiosResponse<Trade, any>> {
   return await axios.get<Trade>(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${id.value}`);
+}
 
-  // res.data.acceptorCards.forEach((element) => {
-  //   for(let i=0; i<element.quantity; i++) {
-  //     acceptorCards.value.push(element.card)
-  //   }
-  // })
+function getProposerCards(): void {
+  trade.value.proposerCards.forEach((tradeCard: TradeCard) => {
+    for (let i=0; i<tradeCard.quantity; i++) {
+      proposerCards.value.push(tradeCard.card)
+    }
+  })
+}
 
-  // res.data.proposerCards.forEach((element) => {
-  //   for(let i=0; i<element.quantity; i++) {
-  //     proposerCards.value.push(element.card)
-  //   }
-  // })
-
-  // isFinancialGaranteed.value = res.data.financialGarantee;
-
-  // trade.value = res.data;
+function getAcceptorCards(): void {
+  trade.value.acceptorCards.forEach((tradeCard: TradeCard) => {
+    for (let i=0; i<tradeCard.quantity; i++) {
+      acceptorCards.value.push(tradeCard.card)
+    }
+  })
 }
 
 function openModal(content: string) {
