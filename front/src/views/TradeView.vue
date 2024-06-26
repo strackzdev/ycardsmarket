@@ -27,7 +27,7 @@
       <main class="mt-10 w-3/5">
         <div class="flex justify-between items-center">
           <h2 class="text-3xl text-white font-bold">OFFER CREATOR HAS</h2>
-          <h2 class="text-2xl text-white">{{ trade.proposerCards.length }} ITEMS</h2>
+          <h2 class="text-2xl text-white">{{ counterProposerCards }} ITEMS</h2>
         </div>
         <div class="flex flex-wrap gap-6 justify-between mt-5">
           <div class="flex gap-4" v-for="card in proposerCards" :key="card.id">
@@ -38,7 +38,7 @@
         <div class="mt-20">
           <div class="flex justify-between items-center">
             <h2 class="text-3xl text-white font-bold">LOOKING FOR</h2>
-            <h2 class="text-2xl text-white">{{ trade.acceptorCards.length }} ITEMS</h2>
+            <h2 class="text-2xl text-white">{{ counterAcceptorCards }} ITEMS</h2>
           </div>
           <div class="flex flex-wrap gap-6 justify-between mt-5">
             <div class="flex gap-4" v-for="card in acceptorCards" :key="card.id">
@@ -80,13 +80,18 @@ import { storeToRefs } from 'pinia';
 import { useTradeStore } from '@/stores/trade';
 import type { Card } from '@/components/card/CardInterface';
 
+// Constants
 const route = useRoute()
-const id = computed(() => route.params.id)
 
 // Refs
 const isFinancialGaranteed = ref<boolean>(true);
 const proposerCards = ref<Card[]>([]);
 const acceptorCards = ref<Card[]>([]);
+const counterProposerCards = ref<number>(0);
+const counterAcceptorCards = ref<number>(0);
+
+// Computeds
+const id = computed(() => route.params.id)
 
 // Stores
 const modalStore = useModalStore();
@@ -99,8 +104,8 @@ const { trade } = storeToRefs(tradeStore)
 onMounted(async () => {
   trade.value = (await getTradeInfo()).data;
   
-  getProposerCards();
-  getAcceptorCards();
+  counterProposerCards.value = getCards(trade.value.proposerCards, proposerCards.value);
+  counterAcceptorCards.value = getCards(trade.value.acceptorCards, acceptorCards.value);
 })
 
 // Functions
@@ -108,23 +113,20 @@ async function getTradeInfo(): Promise<AxiosResponse<Trade, any>> {
   return await axios.get<Trade>(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${id.value}`);
 }
 
-function getProposerCards(): void {
-  trade.value.proposerCards.forEach((tradeCard: TradeCard) => {
+function getCards(tradeCards: TradeCard[], cards: Card[]): number {
+  let counter = 0;
+
+  tradeCards.forEach((tradeCard: TradeCard) => {
     for (let i=0; i<tradeCard.quantity; i++) {
-      proposerCards.value.push(tradeCard.card)
+      cards.push(tradeCard.card);
+      counter++;
     }
   })
+
+  return counter;
 }
 
-function getAcceptorCards(): void {
-  trade.value.acceptorCards.forEach((tradeCard: TradeCard) => {
-    for (let i=0; i<tradeCard.quantity; i++) {
-      acceptorCards.value.push(tradeCard.card)
-    }
-  })
-}
-
-function openModal(content: string) {
+function openModal(content: string): void {
   modalContent.value = content;
   onToggle();
 }
