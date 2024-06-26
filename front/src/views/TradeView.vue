@@ -28,22 +28,22 @@
         <div>
           <div class="flex justify-between">
             <h2 class="text-3xl text-white font-bold">OFFER CREATOR HAS</h2>
-            <h2 class="text-2xl text-white">{{ acceptorCards.length }} ITEMS</h2>
+            <h2 class="text-2xl text-white">{{ trade.acceptorCards.length }} ITEMS</h2>
           </div>
           <div class="flex flex-wrap gap-4 mt-5">
-            <div v-for="card in acceptorCards" :key="card.id">
-              <CardLorcanaComponent class="w-56" :card=card />
+            <div v-for="tradeCard in trade.acceptorCards" :key="tradeCard.id">
+              <CardLorcanaComponent class="w-56" :card=tradeCard.card />
             </div>
           </div>
         </div>
         <div class="mt-20">
           <div class="flex justify-between">
             <h2 class="text-3xl text-white font-bold">LOOKING FOR</h2>
-            <h2 class="text-2xl text-white">{{ proposerCards.length }} ITEMS</h2>
+            <h2 class="text-2xl text-white">{{ trade.proposerCards.length }} ITEMS</h2>
           </div>
           <div class="flex flex-wrap justify-between gap-4 mt-5">
-            <div v-for="card in proposerCards" :key="card.id">
-              <CardLorcanaComponent class="w-56" :card=card />
+            <div v-for="tradeCard in trade.proposerCards" :key="tradeCard.id">
+              <CardLorcanaComponent class="w-56" :card=tradeCard.card />
             </div>
           </div>
         </div>
@@ -73,7 +73,6 @@
 import { useRoute } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
 import axios, { type AxiosResponse } from 'axios'
-import type { Card } from '@/components/card/CardInterface';
 import CardLorcanaComponent from '@/components/card/lorcana/CardLorcanaComponent.vue';
 import type { Trade } from '@/types/trade';
 import { useModalStore } from '@/stores/modal';
@@ -85,8 +84,6 @@ const route = useRoute()
 const id = computed(() => route.params.id)
 
 // Refs
-const acceptorCards = ref<Card[]>([]);
-const proposerCards = ref<Card[]>([]);
 const isFinancialGaranteed = ref<boolean>(true);
 
 // Stores
