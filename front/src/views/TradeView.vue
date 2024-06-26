@@ -25,7 +25,7 @@
 
     <div class="flex justify-between min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8 relative">
       <main class="mt-10 w-3/5">
-        <div class="flex justify-between">
+        <div class="flex justify-between items-center">
           <h2 class="text-3xl text-white font-bold">OFFER CREATOR HAS</h2>
           <h2 class="text-2xl text-white">{{ trade.proposerCards.length }} ITEMS</h2>
         </div>
@@ -36,11 +36,11 @@
         </div>
 
         <div class="mt-20">
-          <div class="flex justify-between">
+          <div class="flex justify-between items-center">
             <h2 class="text-3xl text-white font-bold">LOOKING FOR</h2>
             <h2 class="text-2xl text-white">{{ trade.acceptorCards.length }} ITEMS</h2>
           </div>
-          <div class="flex flex-wrap gap-4 mt-5">
+          <div class="flex flex-wrap gap-6 justify-between mt-5">
             <div class="flex gap-4" v-for="card in acceptorCards" :key="card.id">
               <CardLorcanaComponent class="w-56" :card=card />
             </div>
@@ -48,7 +48,7 @@
         </div>
       </main>
 
-      <aside class="h-fit py-4 sticky top-8 right-0">
+      <aside class="sticky top-8 right-0 h-screen mt-10">
         <div class="flex gap-4">
           <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full" @click="openModal('info')">
             SHIPPING INFO
@@ -57,7 +57,7 @@
             SHIPPING UPDATE
           </button>
         </div>
-        <div class="flex items-center justify-center h-96 mt-4 p-10 bg-white">
+        <div class="flex items-center justify-center h-5/6 mt-4 p-10 bg-white">
           <h2 class="text-base mt-4">Once the offer is accepted, the chat will become available !</h2>
         </div>
       </aside>
