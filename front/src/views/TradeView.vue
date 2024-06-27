@@ -79,6 +79,7 @@ import ShippingModalComponent from '@/components/trading/ShippingModalComponent.
 import { storeToRefs } from 'pinia';
 import { useTradeStore } from '@/stores/trade';
 import type { Card } from '@/components/card/CardInterface';
+import { getAccessToken, decodeToken } from '@/auth/token';
 
 // Constants
 const route = useRoute()
@@ -106,6 +107,9 @@ onMounted(async () => {
   
   counterProposerCards.value = getCards(trade.value.proposerCards, proposerCards.value);
   counterAcceptorCards.value = getCards(trade.value.acceptorCards, acceptorCards.value);
+
+  console.log(decodeToken(getAccessToken()));
+  
 })
 
 // Functions
