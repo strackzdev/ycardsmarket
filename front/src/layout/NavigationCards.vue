@@ -46,7 +46,7 @@ const menuItems = [
   display: flex;
   flex-direction: row;
   align-items: center; /* Center the fan container vertically */
-  z-index: 999; /* Set a high z-index to ensure it appears on top */
+  z-index: 10; /* Set a high z-index to ensure it appears on top */
 }
 
 .fan {
@@ -118,7 +118,7 @@ const menuItems = [
 .fan:nth-child(1):hover .card {
   transform: translateY(-150px) rotate(-10deg);
   transition: transform 0.3s ease;
-  z-index: 999;
+  z-index: 10;
 }
 
 .fan:nth-child(2):hover .card {

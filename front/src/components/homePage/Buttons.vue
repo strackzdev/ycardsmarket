@@ -1,7 +1,7 @@
 <template>
   <button
       :style="[buttonBaseStyle, buttonHoverStyle, buttonStyle]"
-      class="relative overflow-hidden transition-colors duration-300 border border-white"
+      class="relative overflow-hidden transition-colors duration-300 border border-white h-fit"
       @click="$emit('click')"
       @mouseover="isHovered = true"
       @mouseleave="isHovered = false"

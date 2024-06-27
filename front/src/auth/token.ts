@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
+import type { JwtPayload } from 'jwt-decode'
 
 const getAccessToken = (): string | null => {
     return localStorage.getItem('access_token');
@@ -45,6 +47,11 @@ const renewAccessToken = async (): Promise<string> => {
     return response.data.access_token;
 }
 
+const decodeToken = (token: string | null) : JwtPayload => {
+    if(!token) return {} as JwtPayload;
+    return jwtDecode(token);
+}
+
 export { 
     getAccessToken,
     getRefreshToken,
@@ -52,5 +59,6 @@ export {
     setRefreshToken,
     removeAccessToken,
     removeRefreshToken,
-    renewAccessToken
+    renewAccessToken,
+    decodeToken
 }
