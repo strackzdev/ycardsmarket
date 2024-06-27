@@ -138,7 +138,7 @@ const getTimeElapsed = (dateString: string) => {
   if (diffSec < 60) return `${diffSec} secondes ago`;
   if (diffSec < 3600) return `${Math.floor(diffSec / 60)} minutes ago`;
   if (diffSec < 86400) return `${Math.floor(diffSec / 3600)} hours ago`;
-  return `${Math.floor(diffSec / 86400)} jours ago`;
+  return `${Math.floor(diffSec / 86400)} days ago`;
 };
 
 async function loadMore() {

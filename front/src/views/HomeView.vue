@@ -31,7 +31,7 @@
   </div>
   <div class="min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8 relative mt-20">
     <div class="flex flex-wrap gap-10">
-      <div v-for="trade in trades" :key="trade.id" class="flex flex-col gap-4 bg-white w-full lg:w-1/2-5 h-fit p-6">
+      <div v-for="trade in trades" :key="trade.id" class="flex flex-col gap-4 bg-white w-full lg:w-1/2-5 h-fit p-6 cursor-pointer">
         <div class="flex justify-between items-end gap-4">
           <h3 class="uppercase italic font-bold text-2xl">Username</h3>
           <span class="uppercase italic font-bold">{{ getTimeElapsed(trade.createdAt) }}</span>
@@ -134,7 +134,7 @@ const getTimeElapsed = (dateString: string) => {
   if (diffSec < 60) return `${diffSec} secondes ago`;
   if (diffSec < 3600) return `${Math.floor(diffSec / 60)} minutes ago`;
   if (diffSec < 86400) return `${Math.floor(diffSec / 3600)} hours ago`;
-  return `${Math.floor(diffSec / 86400)} jours ago`;
+  return `${Math.floor(diffSec / 86400)} days ago`;
 };
 </script>
 
@@ -193,6 +193,13 @@ const getTimeElapsed = (dateString: string) => {
   justify-content: center;
   align-items: center;
   min-height: 150px; /* Adjust as necessary */
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none;
+}
+
+.card-content:hover {
+  filter: brightness(150%);
 }
 
 .card-content h3, .card-content p {
