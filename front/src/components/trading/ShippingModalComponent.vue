@@ -34,6 +34,7 @@
             <div class="mt-4">
                 <label for="email" class="block mb-2 text-sm font-medium navy-blue">Tracked number</label>
                 <input type="text" v-model="trackedNumber" class="bg-gray-50 border border-gray-300 navy-blue sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="#784d8gr8654" required>
+                <p v-if="isVisible" class="mt-1 text-red-500 text-xs">Field is empty</p>
             </div>
             </div>
 
@@ -61,6 +62,14 @@ import { useModalStore } from '@/stores/modal';
 import { storeToRefs } from 'pinia';
 import ModalComponent from '../utils/ModalComponent.vue';
 import { useTradeStore } from '@/stores/trade';
+import { ref } from 'vue';
+
+// Refs
+const isVisible = ref<boolean>(false)
+
+// Models
+const trackedNumber = defineModel<string>('trackedNumber');
+const proposerDelivered = defineModel<string>('proposerDelivered');
 
 // Stores
 const modalStore  = useModalStore();
@@ -69,11 +78,13 @@ const { onToggle } = modalStore;
 const tradeStore  = useTradeStore();
 const { trade } = storeToRefs(tradeStore);
 
-
-const trackedNumber = defineModel<string>('trackedNumber');
-const proposerDelivered = defineModel<string>('proposerDelivered');
-
+// Functions
 function updateShippingInfo(): void {
+    if (!trackedNumber.value) {
+        isVisible.value = true;
+        return;
+    }
+
     axios.put(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}`, 
         {
             "id": trade.value.id,
@@ -83,6 +94,9 @@ function updateShippingInfo(): void {
             "proposerDelivered": proposerDelivered.value,
             "acceptorDelivered": proposerDelivered.value
         })
+    trade.value.shipping.proposerTrackingNumber = trackedNumber.value;
+
+    isVisible.value = false;
     onToggle();
 };
 
