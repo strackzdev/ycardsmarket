@@ -1,10 +1,24 @@
 <template>
   <div :style="logoButtonsStyle" class="flex justify-between m-[2vw] relative">
-    <div class="flex">
+    <router-link :to="{ name: 'home'}" class="flex" @click="closeAllMenu">
       <img :src="logoSrc" alt="Image Description" class="hidden lg:block h-28">
       <img :src="minLogoSrc" alt="Image Description" class="block lg:hidden h-28">
+    </router-link>
+    <div class="absolute top-10 left-1/2 -translate-x-1/2 flex" :class="(route.name === 'home')? 'text-white' : 'text-[#1A1E3E]'">
+      <div class="hidden gap-4 text-2xl sm:flex">
+        <router-link @click="closeAllMenu" :to="{ name: 'collection' }" class="hover:underline">Cards</router-link>
+        <router-link @click="closeAllMenu" :to="{ name: 'trading' }" class="hover:underline">Trades</router-link>
+        <router-link @click="closeAllMenu" :to="{ name: 'decks' }" class="hover:underline">Decks</router-link>
+      </div>
+      <div class="block sm:hidden">
+        <svg @click="menuIsOpen = !menuIsOpen" class="text-4xl" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6.001h18m-18 6h18m-18 6h18"/></svg>
+        <div class="absolute top-full left-1/2 -translate-x-1/2 flex gap-4 text-2xl flex-col" v-if="menuIsOpen">
+          <router-link @click="closeAllMenu" :to="{ name: 'collection' }" class="hover:underline">Cards</router-link>
+          <router-link @click="closeAllMenu" :to="{ name: 'trading' }" class="hover:underline">Trades</router-link>
+          <router-link @click="closeAllMenu" :to="{ name: 'decks' }" class="hover:underline">Decks</router-link>
+        </div>
+      </div>
     </div>
-
     <div class="flex flex-col lg:flex-row gap-6">
       <template v-if="existsToken">
         <div class="max-w-sm rounded-lg drop-shadow-xl divide-y divide-gray-200 absolute right-0 top-0 z-50" :class="isOpen? 'bg-white p-3' : ''">
@@ -36,7 +50,7 @@
                 </div>
                 <div class="mb-2">
                   <router-link :to="{name: 'my-trades'}"
-                               @click="isOpen = false"
+                               @click="closeAllMenu"
                                class="flex items-center leading-6 space-x-3 py-3 px-4 w-full text-lg text-gray-600 focus:outline-none hover:bg-gray-100 rounded-md">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" class="w-7 h-7" stroke-width="2" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3.604 7.197l7.138-3.109a.96.96 0 0 1 1.27.527l4.924 11.902a1 1 0 0 1-.514 1.304L9.285 20.93a.96.96 0 0 1-1.271-.527L3.09 8.5a1 1 0 0 1 .514-1.304zM15 4h1a1 1 0 0 1 1 1v3.5M20 6q.396.168.768.315a1 1 0 0 1 .53 1.311L19 13"/></svg>
                     <span>Personal Trades</span>
@@ -111,6 +125,8 @@ const router = useRouter();
 
 const isOpen = ref(false);
 
+const menuIsOpen = ref(false);
+
 // Computeds
 const existsToken = computed(() => {
   return !!getAccessToken();
@@ -169,12 +185,18 @@ const logoButtonsStyle = computed(() => {
 
 // Functions
 function loginOnClick() {
+  closeAllMenu()
   router.push({name:'login'});
 }
 
 async function logoutOnClick() {
   await logout();
-
+  closeAllMenu()
   router.push({name:'login'});
+}
+
+function closeAllMenu() {
+  isOpen.value = false;
+  menuIsOpen.value = false;
 }
 </script>

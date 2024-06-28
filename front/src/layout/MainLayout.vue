@@ -1,7 +1,6 @@
 <template>
     <Header/>
     <RouterView/>
-    <NavigationCards/>
 </template>
 
 <script setup lang="ts">
