@@ -13,8 +13,18 @@ export const useTradeStore = defineStore('trade', () => {
           createdAt: '',
           updatedAt: ''
       },
-      proposerUID: '',
-      acceptorUID: null,
+      proposer: {
+        keycloakUUID: '',
+        preferred_username: '',
+        email: '',
+        name: null,
+        family_name: null,
+        given_name: null,
+        email_verified: false,
+        createdAt: '',
+        updatedAt: ''
+      },
+      acceptor: null,
       proposerCards: [],
       acceptorCards: [],
       shipping: {
