@@ -118,6 +118,7 @@ import minLogoWhite from '@/assets/images/minLogoWhite.png';
 import minLogoBlack from '@/assets/images/minLogoBlack.png';
 import { logout } from '@/auth/auth';
 import { decodeToken, getAccessToken } from '@/auth/token'
+import type { User } from '@/types/user';
 
 // Constants
 const route = useRoute();
@@ -133,15 +134,15 @@ const existsToken = computed(() => {
 });
 
 const mail = computed(() => {
-  return decodeToken(getAccessToken())?.email
+  return (decodeToken(getAccessToken()) as User).email
 });
 
 const pseudo = computed(() => {
-  return `${decodeToken(getAccessToken())?.given_name} ${decodeToken(getAccessToken())?.family_name}`
+  return `${(decodeToken(getAccessToken()) as User).given_name} ${(decodeToken(getAccessToken()) as User).family_name}`
 });
 
 const urlAvatar = computed(() => {
-  return `https://ui-avatars.com/api/?name=${decodeToken(getAccessToken())?.given_name}+${decodeToken(getAccessToken())?.family_name}`
+  return `https://ui-avatars.com/api/?name=${(decodeToken(getAccessToken()) as User).given_name}+${(decodeToken(getAccessToken()) as User).family_name}`
 });
 
 
