@@ -12,9 +12,9 @@
     </label>
     <div class="min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8 relative">
       <div class="flex flex-wrap gap-10">
-        <div v-for="trade in trades" :key="trade.id" class="flex flex-col gap-4 bg-white w-full lg:w-1/2-5 h-fit p-6">
+        <router-link v-for="trade in trades" :key="trade.id" :to="{ name: 'trade', params: { id: trade.id }}" class="flex flex-col gap-4 bg-white w-full lg:w-1/2-5 h-fit p-6">
           <div class="flex justify-between items-end gap-4">
-            <h3 class="uppercase italic font-bold text-2xl">Username</h3>
+            <h3 class="uppercase italic font-bold text-2xl">{{trade.proposer.name? trade.proposer.name : trade.proposer.email }}</h3>
             <span class="uppercase italic font-bold">{{ getTimeElapsed(trade.createdAt) }}</span>
           </div>
           <div class="flex justify-between items-center">
@@ -55,7 +55,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </router-link>
       </div>
       <div ref="infiniteScroll" />
     </div>
