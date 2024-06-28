@@ -21,10 +21,15 @@
     </p>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4 md:px-20">
-    <div class="card-container mt-4 mb-4" v-for="card in cards" :key="card.title">
+    <div class="card-container mt-4 mb-4"
+         v-for="card in cards"
+         :key="card.title"
+         @click="navigate(card.title, card.disabled)"
+         :class="[card.disabled ? '' : 'disabled']"
+    >
       <overall-cards
           :title="card.title"
-          :redirectUrl="card.redirectUrl"
+          :disabled="card.disabled"
           class="card-content"
       />
     </div>
@@ -80,17 +85,24 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import {onMounted, reactive, ref} from 'vue'
 import Button from '@/components/homePage/Buttons.vue';
 import axios from 'axios';
 import overallCards from '@/components/homePage/OverallCategoCards.vue';
+import router from "@/router";
 
 const cards = reactive([
-  {title: 'LORCANA', redirectUrl: 'https://example.com/1'},
-  {title: 'MAGIC THE GATHERING', redirectUrl: 'https://example.com/2'},
-  {title: 'POKEMON', redirectUrl: 'https://example.com/3'},
-  {title: 'YU-GI-OH', redirectUrl: 'https://example.com/4'},
+  {title: 'LORCANA', redirectUrl: 'https://example.com/1', disabled: false},
+  {title: 'MAGIC THE GATHERING', redirectUrl: 'https://example.com/2', disabled: true},
+  {title: 'POKEMON', redirectUrl: 'https://example.com/3', disabled: true},
+  {title: 'YU-GI-OH', redirectUrl: 'https://example.com/4', disabled: true},
 ]);
+
+function navigate(game: string, disabled: boolean) {
+  if(!disabled) {
+    router.push({ path: '/cards', query: { game: game } })
+  }
+}
 
 const exchangeClicked = () => {
   // Your logic here
@@ -136,6 +148,7 @@ const getTimeElapsed = (dateString: string) => {
   if (diffSec < 86400) return `${Math.floor(diffSec / 3600)} hours ago`;
   return `${Math.floor(diffSec / 86400)} days ago`;
 };
+
 </script>
 
 <style scoped>

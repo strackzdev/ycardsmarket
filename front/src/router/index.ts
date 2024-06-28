@@ -29,7 +29,7 @@ const router = createRouter({
           component: HomeView
         },
         {
-          path: '/collection',
+          path: '/cards',
           name: 'collection',
           component: CollectionView
         },
