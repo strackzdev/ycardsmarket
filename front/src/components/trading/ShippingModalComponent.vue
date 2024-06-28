@@ -63,6 +63,7 @@ import { storeToRefs } from 'pinia';
 import ModalComponent from '../utils/ModalComponent.vue';
 import { useTradeStore } from '@/stores/trade';
 import { ref } from 'vue';
+import { decodeToken, getAccessToken } from '@/auth/token';
 
 // Refs
 const isVisible = ref<boolean>(false)
@@ -79,22 +80,33 @@ const tradeStore  = useTradeStore();
 const { trade } = storeToRefs(tradeStore);
 
 // Functions
-function updateShippingInfo(): void {
+async function updateShippingInfo(): Promise<void> {
     if (!trackedNumber.value) {
         isVisible.value = true;
         return;
     }
 
-    axios.put(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}`, 
-        {
-            "id": trade.value.id,
-            "method": trade.value.shipping.method,
-            "proposerTrackingNumber": trackedNumber.value,
-            "acceptorTrackingNumber": trackedNumber.value,
-            "proposerDelivered": proposerDelivered.value,
-            "acceptorDelivered": proposerDelivered.value
-        })
-    trade.value.shipping.proposerTrackingNumber = trackedNumber.value;
+    const sub = decodeToken(getAccessToken()).sub;
+
+    let payload = {
+        "id": trade.value.id,
+        "method": trade.value.shipping.method,
+        "proposerTrackingNumber": trade.value.shipping.proposerTrackingNumber,
+        "acceptorTrackingNumber": trade.value.shipping.acceptorTrackingNumber,
+        "proposerDelivered": trade.value.shipping.proposerDelivered,
+        "acceptorDelivered": trade.value.shipping.acceptorDelivered
+    }
+
+    if(trade.value.proposer.keycloakUUID === sub) {
+        payload.proposerTrackingNumber = trackedNumber.value;
+    }
+
+    if(trade.value.acceptor?.keycloakUUID === sub) {
+        payload.acceptorTrackingNumber = trackedNumber.value;
+    }
+
+    const res = await axios.put(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}`, payload);
+    trade.value = res.data;
 
     isVisible.value = false;
     onToggle();
