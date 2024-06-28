@@ -7,6 +7,12 @@ export default {
   ],
     theme: {
     extend: {
+      spacing: {
+        '1/2-2': 'calc(50% - 0.5rem)',
+        '1/2-4': 'calc(50% - 1rem)',
+        '1/2-5': 'calc(50% - 1.25rem)',
+        '1/2-8': 'calc(50% - 2rem)',
+      },
       padding: {
         'custom': '100px',
       },

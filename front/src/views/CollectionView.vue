@@ -23,11 +23,14 @@ import InfiniteScrollingComponent from '@/components/utils/InfiniteScrollingComp
 import SearchBarComponent from '@/components/utils/SearchBarComponent.vue';
 import FilterDropdownComponent, { type Filter } from '@/components/utils/FilterDropdownComponent.vue';
 import axios, { type AxiosResponse } from 'axios';
-import { ref, type Ref } from 'vue';
+import {onMounted, ref, type Ref} from 'vue';
 import { cardMappingProperties } from '@/components/card/lorcana/CardLorcanaEnum';
 import { CardCommonPropertyEnum, GameLabelEnum } from '@/components/card/CardEnum';
 import type { Page } from '@/types/page';
 import type { FilterOption } from '../components/utils/FilterDropdownComponent.vue';
+import {onBeforeRouteUpdate, useRoute} from 'vue-router'
+import * as url from "node:url";
+
 
 // Consts
 const pageSize = 20;
@@ -154,4 +157,14 @@ async function getGameValue(filter: Filter): Promise<void> {
     cards.value.length = 0;
   }
 }
+
+onMounted(() => {
+  let urlParams = new URLSearchParams(window.location.search);
+  if(urlParams.has('game')) {
+    gameValue.value = urlParams.get('game') ?? "LORCANA";
+  } else {
+    gameValue.value = "LORCANA";
+  }
+  getGameValue({value: gameValue.value, filterName: "cardGame"})
+})
 </script>
