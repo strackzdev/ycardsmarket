@@ -16,11 +16,11 @@
                 <CardLorcanaComponent class="w-56 customFlip" :card=card />
               </div>
               <div class="flip-card-back flex flex-col justify-center items-center gap-6">
-                <button class="uppercase bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToLookingFor(card)">
-                  Looking for
+                <button class="flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToLookingFor(card)">
+                  Offer
                 </button>
-                <button class="uppercase bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToOffer(card)">
-                  offer
+                <button class="flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToOffer(card)">
+                  Loocking for
                 </button>
               </div>
             </div>
@@ -396,8 +396,13 @@ async function getGameValue(filter: Filter): Promise<void> {
 }
 
 .flip-card-back {
-  background: #686868;
+  background-color: #555C93;
   transform: rotateY(180deg);
   color: white;
 }
+
+.flip-buttons {
+  border-radius: 9999px;
+}
+
 </style>

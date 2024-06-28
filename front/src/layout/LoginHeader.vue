@@ -24,7 +24,7 @@
         <div class="max-w-sm rounded-lg drop-shadow-xl divide-y divide-gray-200 absolute right-0 top-0 z-50" :class="isOpen? 'bg-white p-3' : ''">
           <div aria-label="header" class="flex space-x-4 items-center p-4 cursor-pointer" :class="isOpen? 'rounded-t-md hover:bg-gray-100' : 'rounded-md'" @click="isOpen = !isOpen">
             <div aria-label="avatar" class="flex mr-auto items-center space-x-4">
-              <img :src="urlAvatar" alt="avatar Evan You" class="w-18 h-18 shrink-0 rounded-full border-4 border-transparent" :class="isOpen? '' : 'hover:border-purple-700'" />
+              <img :src="urlAvatar" alt="avatar Evan You" class="w-18 h-18 shrink-0 rounded-full border-4 border-transparent" :class="isOpen? '' : 'hover:border-blue-950'" />
               <div class="space-y-2 flex flex-col flex-1 truncate" :class="isOpen? 'block' : 'hidden'">
                 <div class="font-medium relative text-xl leading-tight text-gray-900">
                   <span class="flex">
