@@ -9,6 +9,7 @@ import LoginView from '@/views/LoginView.vue'
 import MainLayout from '@/layout/MainLayout.vue'
 import { isAuthenticated } from '@/auth/auth'
 import TradeView from '@/views/TradeView.vue'
+import PersonalTradeView from '@/views/PersonalTradeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,7 +67,13 @@ const router = createRouter({
           name: 'trade',
           component: TradeView,
           beforeEnter: [redirectToLogin]
-        }
+        },
+        {
+          path: '/my-trades',
+          name: 'my-trades',
+          component: PersonalTradeView,
+          beforeEnter: [redirectToLogin]
+        },
       ]
     }
   ],
