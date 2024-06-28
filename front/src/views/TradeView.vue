@@ -50,12 +50,22 @@
 
       <aside class="sticky top-8 right-0 h-screen mt-10">
         <div class="flex gap-4">
-          <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full" @click="openModal('info')">
-            SHIPPING INFO
-          </button>
-          <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full" @click="openModal('update')">
-            SHIPPING UPDATE
-          </button>
+          <template v-if="!isProposer && !isAccepted">
+            <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full" @click="acceptOffer()">
+              ACCEPT
+            </button>
+            <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full">
+              COUNTER OFFER
+            </button>
+          </template>
+          <template v-else>
+            <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full" @click="openModal('info')">
+              SHIPPING INFO
+            </button>
+            <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full" @click="openModal('update')">
+              SHIPPING UPDATE
+            </button>
+          </template>
         </div>
         <div class="flex items-center justify-center h-5/6 mt-4 p-10 bg-white">
           <h2 class="text-base mt-4">Once the offer is accepted, the chat will become available !</h2>
@@ -90,6 +100,8 @@ const proposerCards = ref<Card[]>([]);
 const acceptorCards = ref<Card[]>([]);
 const counterProposerCards = ref<number>(0);
 const counterAcceptorCards = ref<number>(0);
+const isProposer = ref<boolean>(true);
+const isAccepted = ref<boolean>(false);
 
 // Computeds
 const id = computed(() => route.params.id)
@@ -108,8 +120,10 @@ onMounted(async () => {
   counterProposerCards.value = getCards(trade.value.proposerCards, proposerCards.value);
   counterAcceptorCards.value = getCards(trade.value.acceptorCards, acceptorCards.value);
 
-  console.log(decodeToken(getAccessToken()));
-  
+  const sub = decodeToken(getAccessToken()).sub;
+
+  isProposer.value = trade.value.proposer.keycloakUUID === sub ? true : false;
+  isAccepted.value = trade.value.acceptor ? true : false;
 })
 
 // Functions
@@ -133,6 +147,14 @@ function getCards(tradeCards: TradeCard[], cards: Card[]): number {
 function openModal(content: string): void {
   modalContent.value = content;
   onToggle();
+}
+
+async function acceptOffer(): Promise<AxiosResponse<Trade, any>> {
+  const res = await axios.post<Trade>(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}/accept`);
+  trade.value = res.data;
+  isAccepted.value = trade.value.acceptor ? true : false;
+
+  return res;
 }
 
 </script>
