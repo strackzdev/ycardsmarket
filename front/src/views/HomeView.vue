@@ -35,6 +35,7 @@
     </div>
   </div>
   <div class="min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8 relative mt-20">
+    <div class="text-4xl font-semibold text-white text-center mb-8 mt-8">10 LAST TRADES</div>
     <div class="flex flex-wrap gap-10">
       <TradeComponent v-for="trade in trades" :key="trade.id" :trade="trade" />
     </div>
