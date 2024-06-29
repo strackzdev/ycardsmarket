@@ -10,6 +10,7 @@ import MainLayout from '@/layout/MainLayout.vue'
 import { isAuthenticated } from '@/auth/auth'
 import TradeView from '@/views/TradeView.vue'
 import PersonalTradeView from '@/views/PersonalTradeView.vue'
+import SignUpView from '@/views/SignUpView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,6 +19,12 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
+      beforeEnter: [redirectToHome]
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: SignUpView,
       beforeEnter: [redirectToHome]
     },
     {

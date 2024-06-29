@@ -31,8 +31,9 @@
             <a href="#" class="text-sm font-medium text-primary-600 hover:underline">Forgot password?</a>
           </div>
           <button type="submit" class="login-buttons py-2 w-full navy-blue-bg text-white">Sign in</button>
+ 
           <p class="text-sm font-light barbel-blue">
-            Don’t have an account yet? <a href="#" class="font-bold navy-blue text-primary-600 hover:underline">Sign up</a>
+            Don’t have an account yet? <router-link :to="{ name: 'signup'}" class="font-bold navy-blue hover:underline">Sign up</router-link>
           </p>
         </form>
       </div>
