@@ -13,7 +13,7 @@
       
       <div class="mt-3 flex justify-between items-center">
         <div class="flex items-center">
-          <svg v-if="isFinancialGaranteed" width="28" height="28" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg v-if="trade.financialGarantee" width="28" height="28" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M6.50142 0C2.91657 0 0 2.91657 0 6.50142C0 10.0863 2.91657 13.0028 6.50142 13.0028C10.0863 13.0028 13.0028 10.0863 13.0028 6.50142C13.0028 2.91657 10.0863 0 6.50142 0ZM9.88497 4.3225L5.68405 9.32359C5.63797 9.37848 5.58063 9.42282 5.51592 9.45362C5.4512 9.48441 5.38063 9.50093 5.30897 9.50207H5.30053C5.23043 9.50205 5.16112 9.48728 5.0971 9.45875C5.03307 9.43021 4.97576 9.38853 4.92889 9.33641L3.12849 7.33597C3.08277 7.28748 3.0472 7.23033 3.02388 7.16789C3.00056 7.10545 2.98995 7.03898 2.99269 6.97239C2.99542 6.90579 3.01144 6.84041 3.0398 6.7801C3.06816 6.71978 3.10829 6.66574 3.15784 6.62115C3.20738 6.57657 3.26534 6.54234 3.3283 6.52047C3.39126 6.4986 3.45796 6.48954 3.52448 6.49382C3.59099 6.4981 3.65598 6.51563 3.71562 6.54538C3.77526 6.57514 3.82836 6.61651 3.87178 6.66708L5.2874 8.23992L9.11917 3.67924C9.20512 3.57987 9.32673 3.51831 9.4577 3.50787C9.58867 3.49744 9.71849 3.53896 9.81909 3.62347C9.91969 3.70797 9.983 3.82867 9.99533 3.95948C10.0077 4.09029 9.96801 4.22069 9.88497 4.3225Z" fill="black"/>
           </svg>
           <svg v-else width="28" height="28" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,22 +21,26 @@
           </svg>
           <div class="ml-2 md:text-left text-base md:text-2xl">Finantial guarantee</div>
         </div>
-        <div>
+        <div v-if="isProposer">
           <button class="navy-blue-bg text-white py-2 px-4 rounded-full inline-flex justify-between items-center" @click="selectOpen = !selectOpen">
             <span>More Actions</span>
             <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </button>
           <div class="absolute z-50 mt-2 rounded-md shadow-lg bg-white border border-gray-200" v-show="selectOpen" @click="selectOpen = false">
             <div class="py-1 text-gray-700 dark:text-gray-400 text-sm" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              <span 
-                class="flex items-center cursor-pointer px-4 py-2 hover:bg-gray-100" role="menuitem"
-                v-for="option in actions" :key="option.value"
-                @click="executeAction(option)">
-                <svg v-if="option.value === 'EDIT'" class="mr-2" xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21v-4.25L16.2 3.575q.3-.275.663-.425t.762-.15t.775.15t.65.45L20.425 5q.3.275.438.65T21 6.4q0 .4-.137.763t-.438.662L7.25 21zM17.6 7.8L19 6.4L17.6 5l-1.4 1.4z"/></svg>
-                <svg v-if="option.value === 'DUPLICATE'" class="mr-2" xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 512 512"><path fill="currentColor" d="M408 112H184a72 72 0 0 0-72 72v224a72 72 0 0 0 72 72h224a72 72 0 0 0 72-72V184a72 72 0 0 0-72-72m-32.45 200H312v63.55c0 8.61-6.62 16-15.23 16.43A16 16 0 0 1 280 376v-64h-63.55c-8.61 0-16-6.62-16.43-15.23A16 16 0 0 1 216 280h64v-63.55c0-8.61 6.62-16 15.23-16.43A16 16 0 0 1 312 216v64h64a16 16 0 0 1 16 16.77c-.42 8.61-7.84 15.23-16.45 15.23"/><path fill="currentColor" d="M395.88 80A72.12 72.12 0 0 0 328 32H104a72 72 0 0 0-72 72v224a72.12 72.12 0 0 0 48 67.88V160a80 80 0 0 1 80-80Z"/></svg>
-                <svg v-if="option.value === 'DELETE'" class="mr-2" xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"/></svg>
-                {{ option.label }}
+              <span disabled class="flex items-center cursor-not-allowed px-4 py-2 enabled:hover:bg-gray-100" role="menuitem" @click="executeAction('EDIT')">
+                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21v-4.25L16.2 3.575q.3-.275.663-.425t.762-.15t.775.15t.65.45L20.425 5q.3.275.438.65T21 6.4q0 .4-.137.763t-.438.662L7.25 21zM17.6 7.8L19 6.4L17.6 5l-1.4 1.4z"/></svg>
+                Edit
               </span>
+              <span disabled class="flex items-center cursor-not-allowed px-4 py-2 enabled:hover:bg-gray-100" role="menuitem" @click="executeAction('DUPLICATE')">
+                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 512 512"><path fill="currentColor" d="M408 112H184a72 72 0 0 0-72 72v224a72 72 0 0 0 72 72h224a72 72 0 0 0 72-72V184a72 72 0 0 0-72-72m-32.45 200H312v63.55c0 8.61-6.62 16-15.23 16.43A16 16 0 0 1 280 376v-64h-63.55c-8.61 0-16-6.62-16.43-15.23A16 16 0 0 1 216 280h64v-63.55c0-8.61 6.62-16 15.23-16.43A16 16 0 0 1 312 216v64h64a16 16 0 0 1 16 16.77c-.42 8.61-7.84 15.23-16.45 15.23"/><path fill="currentColor" d="M395.88 80A72.12 72.12 0 0 0 328 32H104a72 72 0 0 0-72 72v224a72.12 72.12 0 0 0 48 67.88V160a80 80 0 0 1 80-80Z"/></svg>
+                Duplicate
+              </span>
+              <span class="flex items-center cursor-pointer px-4 py-2 hover:bg-gray-100" role="menuitem" @click="executeAction('DELETE')">
+                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"/></svg>
+                Delete
+              </span>
+
             </div>
           </div>
         </div>
@@ -74,7 +78,7 @@
             <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full" @click="acceptOffer()">
               ACCEPT
             </button>
-            <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full">
+            <button disabled class="cursor-not-allowed text-[#1A1E3E] bg-white enabled:hover:bg-[#c7cee6] disabled:hover:opacity-75 font-bold py-2 px-4 w-full rounded-full">
               COUNTER OFFER
             </button>
           </template>
@@ -111,30 +115,17 @@ import { useTradeStore } from '@/stores/trade';
 import type { Card } from '@/components/card/CardInterface';
 import { getAccessToken, decodeToken } from '@/auth/token';
 
-// Types
-export type Actions = {
-  label: string,
-  value: "EDIT" | "DUPLICATE" | "DELETE"
-}
-
 // Constants
 const route = useRoute()
 
 // Refs
-const isFinancialGaranteed = ref<boolean>(true);
 const proposerCards = ref<Card[]>([]);
 const acceptorCards = ref<Card[]>([]);
 const counterProposerCards = ref<number>(0);
 const counterAcceptorCards = ref<number>(0);
-const isProposer = ref<boolean>(true);
+const isProposer = ref<boolean>(false);
 const isAccepted = ref<boolean>(false);
 const selectOpen = ref(false);
-
-const actions: Ref<Actions[]> = ref([
-  { label: 'Edit', value: 'EDIT' },
-  { label: 'Duplicate', value: 'DUPLICATE' },
-  { label: 'Delete', value: 'DELETE' },
-]);
 
 // Constants
 const router = useRouter();
@@ -193,8 +184,8 @@ async function acceptOffer(): Promise<AxiosResponse<Trade, any>> {
   return res;
 }
 
-async function executeAction(option: Actions | undefined): Promise<void> {
-  if(option?.value === 'DELETE') {
+async function executeAction(option: string | undefined): Promise<void> {
+  if(option === 'DELETE') {
     await axios.delete(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}`);
     router.push({ name: 'my-trades'});
   }
