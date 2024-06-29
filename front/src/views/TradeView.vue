@@ -181,15 +181,17 @@ function openModal(content: string): void {
 
 async function acceptOffer(): Promise<void> {
   open(
-      'Are you sure you want to accept this trade ?',
-      async () => {
-          await axios.post<Trade>(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}/accept`)
-          .then((res) => {
-              trade.value = res.data;
-              isAccepted.value = trade.value.acceptor ? true : false;
-            }
-          );
-      }
+    'Are you sure you want to accept this trade ?',
+    async () => {
+      await axios.post<Trade>(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}/accept`)
+      .then((res) => {
+          trade.value = res.data;
+          isAccepted.value = trade.value.acceptor ? true : false;
+      })
+      .catch(() => {
+        alert('An error occured')
+      });
+    }
   )
 }
 
@@ -197,19 +199,17 @@ async function executeAction(option: string | undefined): Promise<void> {
   if(option === 'DELETE') {
       open(
     'Are you sure you want to delete this trade ?',
-  async () => {
-          await axios.delete(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}`)
-              .then(() => {
-                router.push({name: 'my-trades'});
-              }
-          )
-        }
-      )
+    async () => {
+        await axios.delete(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}`)
+        .then(() => {
+            router.push({name: 'my-trades'});
+        })
+       .catch(() => {
+          alert('An error occured')
+        });
+      }
+    )
   }
-
-  // await axios.delete(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}`);
-  // await router.push({name: 'my-trades'});
-
   selectOpen.value = false;
 }
 

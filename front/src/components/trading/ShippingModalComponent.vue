@@ -140,11 +140,9 @@ function openShippingUpdateContent(): void {
 }
 
 function shippingInformationLabel(): string {
-  let tradeStatus = " (Waiting for Acceptance)";
-  if(trade.value.acceptor?.keycloakUUID) {
-    tradeStatus = " (Accepted)";
-  }
-  return "Trade Information's" + tradeStatus;
+  const baseLabel = "Trade Information's";
+  const tradeStatus = trade.value.acceptor?.keycloakUUID ? "Accepted" : "Waiting for Acceptance";
+  return `${baseLabel} (${tradeStatus})`;
 }
 
 </script>
