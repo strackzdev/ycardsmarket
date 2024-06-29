@@ -32,7 +32,7 @@
         <h2 class="uppercase text-2xl font-bold mt-4">Your cards</h2>
         <div class="flex flex-col gap-2 my-4 max-h-48 overflow-y-auto">
           <div v-for="item in lookingForCards" :key="item.card.id" class="flex justify-between items-center relative rounded-t-lg overflow-clip">
-            <div class="absolute w-full h-full opacity-80 bg-gradient-to-r from-purple-900 to-pink-800" />
+            <div class="absolute w-full h-full opacity-80" :class="dynamicGradient(JSON.parse(item.card.attributes).Color)" />
             <div class="flex gap-2 items-center">
               <img class="min-w-20 h-12 object-top object-cover" :src="item.card.imageUrl" alt="" />
               <span class="-ml-12 text-white relative">{{ item.card.name }}</span>
@@ -51,7 +51,7 @@
         <h2 class="uppercase text-2xl font-bold mt-4">Looking for</h2>
         <div class="flex flex-col gap-2 my-4 max-h-48 overflow-y-auto">
           <div v-for="item in offerCards" :key="item.card.id" class="flex justify-between items-center relative rounded-t-lg overflow-clip">
-            <div class="absolute w-full h-full opacity-80 bg-gradient-to-r from-purple-900 to-pink-800" />
+            <div class="absolute w-full h-full opacity-80" :class="dynamicGradient(JSON.parse(item.card.attributes).Color)" />
             <div class="flex gap-2 items-center">
               <img class="min-w-20 h-12 object-top object-cover" :src="item.card.imageUrl" alt="" />
               <span class="-ml-12 text-white relative">{{ item.card.name }}</span>
@@ -166,6 +166,10 @@ const filterType: Ref<string | undefined> = ref();
 const filterRarity: Ref<string | undefined> = ref();
 
 // Functions
+function dynamicGradient(color: string) {
+   return `bg-gradient-to-r from-${color.toLowerCase()} to-gray-400`
+}
+
 function incrementCardToLookingFor(card: Card) {
   if (lookingForCards.value.some(cardQuantity => cardQuantity.card.id === card.id)) {
     lookingForCards.value = lookingForCards.value.map(cardQuantity => {
