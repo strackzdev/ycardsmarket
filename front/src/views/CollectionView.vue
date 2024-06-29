@@ -93,7 +93,7 @@ async function intersected(): Promise<void> {
 async function getSearchValue(filter: Filter): Promise<void> {
   searchValue.value = filter.value;
 
-  if(filter.value && gameValue.value) {
+  if(gameValue.value) {
     pageIndex = 0;
     cards.value = [...(await getCards(pageSize, gameValue.value, filters.value, pageIndex, searchValue.value)).data.items]
   }
