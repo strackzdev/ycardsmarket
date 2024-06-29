@@ -114,6 +114,7 @@ import { CardCommonPropertyEnum, GameLabelEnum } from '@/components/card/CardEnu
 import type { Page } from '@/types/page';
 import type { FilterOption } from '../components/utils/FilterDropdownComponent.vue';
 import { useRouter } from 'vue-router'
+import { useConfirmModalStore } from '@/stores/confirmModalStore'
 
 const router = useRouter()
 
@@ -126,6 +127,10 @@ export type DeliveryMethod = {
   label: string,
   value: "IN_HANDS" | "LOCAL_STORE" | "MONDIAL_RELAY" | "TRACKED_LETTER"
 }
+
+const modalStore = useConfirmModalStore()
+
+const { open } = modalStore
 
 // Consts
 const pageSize = 20;
@@ -214,53 +219,59 @@ function decrementCardFromOffer(card: Card) {
   }).filter(cardQuantity => cardQuantity.quantity > 0)
 }
 
+
 async function handleSubmit() {
   if (!selectedOption.value) return alert('Please select a delivery method')
   if (lookingForCards.value.length === 0) return alert('Please select at least one card you are looking for')
   if (offerCards.value.length === 0) return alert('Please select at least one card you are offering')
 
-  await axios.get(`${import.meta.env.VITE_BACKEND_PROXY}/card-games`)
-    .then((res) => {
-      const cardGame = res.data.find((game: any) => game.label === gameValue.value)
-      const trade = {
-        "financialGarantee": financialGuarantee.value,
-        "cardGame": {
-          "id": cardGame.id
-        },
-        "shipping": {
-          "method": selectedOption.value?.value,
-        },
-        "acceptorCards": lookingForCards.value.map(cardQuantity => {
-          return {
-            "card": {
-              "id": cardQuantity.card.id
-            },
-            "quantity": cardQuantity.quantity
-          }
-        }),
-        "proposerCards": offerCards.value.map(cardQuantity => {
-          return {
-            "card": {
-              "id": cardQuantity.card.id
-            },
-            "quantity": cardQuantity.quantity
-          }
-        })
-      }
-      axios.post(`${import.meta.env.VITE_BACKEND_PROXY}/trades`, trade)
+  open(
+    'Do you want to publish this trade ?',
+    async () => {
+      await axios.get(`${import.meta.env.VITE_BACKEND_PROXY}/card-games`)
         .then((res) => {
-          lookingForCards.value = []
-          offerCards.value = []
-          router.push({ name: 'trade', params: { id: res.data.id } })
+          const cardGame = res.data.find((game: any) => game.label === gameValue.value)
+          const trade = {
+            "financialGarantee": financialGuarantee.value,
+            "cardGame": {
+              "id": cardGame.id
+            },
+            "shipping": {
+              "method": selectedOption.value?.value,
+            },
+            "acceptorCards": lookingForCards.value.map(cardQuantity => {
+              return {
+                "card": {
+                  "id": cardQuantity.card.id
+                },
+                "quantity": cardQuantity.quantity
+              }
+            }),
+            "proposerCards": offerCards.value.map(cardQuantity => {
+              return {
+                "card": {
+                  "id": cardQuantity.card.id
+                },
+                "quantity": cardQuantity.quantity
+              }
+            })
+          }
+          axios.post(`${import.meta.env.VITE_BACKEND_PROXY}/trades`, trade)
+            .then((res) => {
+              lookingForCards.value = []
+              offerCards.value = []
+              router.push({ name: 'trade', params: { id: res.data.id } })
+            })
+            .catch(() => {
+              alert('An error occured')
+            })
+
         })
         .catch(() => {
           alert('An error occured')
         })
-
-    })
-    .catch(() => {
-      alert('An error occured')
-    })
+    }
+  )
 }
 
 async function getCards(pageSize: number, game: string, filters?: Filter[], pageIndex?: number, search?: string): Promise<AxiosResponse<Page<Card>, any>> {
