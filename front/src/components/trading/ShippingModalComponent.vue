@@ -1,7 +1,7 @@
 <template>
     <ModalComponent>
         <template v-if="modalContent === 'info' && isOpen">
-            <h1 class="font-bold text-xl">Shipping Informations</h1>
+            <h1 class="font-bold text-xl">{{ shippingInformationLabel() }}</h1>
             <p class="text-[#555C93] text-lg">Method - Tracked Letter (With Financial Garantee)</p>
             <div class="flex gap-10 mt-5">
                 <div class="w-1/2">
@@ -137,6 +137,14 @@ async function updateShippingInfo(): Promise<void> {
 
 function openShippingUpdateContent(): void {
     modalContent.value = 'update'
+}
+
+function shippingInformationLabel(): string {
+  let tradeStatus = " (Waiting for Acceptance)";
+  if(trade.value.acceptor?.keycloakUUID) {
+    tradeStatus = " (Accepted)";
+  }
+  return "Trade Information's" + tradeStatus;
 }
 
 </script>

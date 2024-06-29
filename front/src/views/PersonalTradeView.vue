@@ -87,6 +87,11 @@ async function loadMore() {
   <div class="pt-8 mt-20">
     <div class="flex justify-between">
       <h1 class="md:px-8 lg:px-24 mb-10 navy-blue font-bold text-center md:text-left text-xl md:text-5xl uppercase">My Trades</h1>
+      <div class="md:px-8 lg:px-24 mb-10 flex justify-between gap-4">
+        <router-link :to="{name: 'create-trade'}" class="bg-[#1A1E3E] create-trade w-fit h-fit text-white border-black py-3 px-6 text-lg font-bold uppercase transition-all hover:opacity-75 focus:ring focus:accent-gray-500 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+          Create Trade
+        </router-link>
+      </div>
     </div>
 
     <div class="min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8 relative mt-20">
@@ -105,3 +110,9 @@ async function loadMore() {
     </div>
   </div>
 </template>
+
+<style scoped>
+.create-trade {
+  border-radius: 999px;
+}
+</style>

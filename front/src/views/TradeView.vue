@@ -84,7 +84,7 @@
           </template>
           <template v-else>
             <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full" @click="openModal('info')">
-              SHIPPING INFO
+              TRADE INFO
             </button>
             <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full" @click="openModal('update')">
               SHIPPING UPDATE
@@ -114,6 +114,7 @@ import { storeToRefs } from 'pinia';
 import { useTradeStore } from '@/stores/trade';
 import type { Card } from '@/components/card/CardInterface';
 import { getAccessToken, decodeToken } from '@/auth/token';
+import {useConfirmModalStore} from "@/stores/confirmModalStore";
 
 // Constants
 const route = useRoute()
@@ -135,6 +136,8 @@ const id = computed(() => route.params.id);
 
 // Stores
 const modalStore = useModalStore();
+const modalStoreConfirm = useConfirmModalStore()
+const { open } = modalStoreConfirm;
 const { onToggle } = modalStore;
 const { modalContent } = storeToRefs(modalStore);
 const tradeStore = useTradeStore();
@@ -176,19 +179,36 @@ function openModal(content: string): void {
   onToggle();
 }
 
-async function acceptOffer(): Promise<AxiosResponse<Trade, any>> {
-  const res = await axios.post<Trade>(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}/accept`);
-  trade.value = res.data;
-  isAccepted.value = trade.value.acceptor ? true : false;
-
-  return res;
+async function acceptOffer(): Promise<void> {
+  open(
+      'Are you sure you want to accept this trade ?',
+      async () => {
+          await axios.post<Trade>(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}/accept`)
+          .then((res) => {
+              trade.value = res.data;
+              isAccepted.value = trade.value.acceptor ? true : false;
+            }
+          );
+      }
+  )
 }
 
 async function executeAction(option: string | undefined): Promise<void> {
   if(option === 'DELETE') {
-    await axios.delete(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}`);
-    router.push({ name: 'my-trades'});
+      open(
+    'Are you sure you want to delete this trade ?',
+  async () => {
+          await axios.delete(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}`)
+              .then(() => {
+                router.push({name: 'my-trades'});
+              }
+          )
+        }
+      )
   }
+
+  // await axios.delete(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}`);
+  // await router.push({name: 'my-trades'});
 
   selectOpen.value = false;
 }
