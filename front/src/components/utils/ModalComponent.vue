@@ -1,7 +1,7 @@
 
 <template>
   <transition name="fade">
-      <div v-if="isOpen" class="bg-[#70707075] fixed top-0 left-0 w-screen h-screen">
+      <div v-if="isOpen" @click="onToggle()" class="bg-[#70707075] fixed top-0 left-0 w-screen h-screen">
         <div class="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 p-10 bg-white rounded-3xl lg:w-[40vw] w-[90vw] min-w-[200px] max-w-[2000px]">
           <div>
             <svg @click="onToggle()" class="absolute top-5 right-5 active:translate-x-0.5 active:translate-y-0.5 cursor-pointer" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
