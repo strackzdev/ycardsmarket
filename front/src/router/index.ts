@@ -96,8 +96,9 @@ async function isTraders(to: RouteLocationNormalized) {
     
     try {
       trade.value = (await axios.get<Trade>(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${to.params.id}`)).data;
+      if(!trade.value.acceptor) return true;
       if(trade.value.proposer.keycloakUUID === sub) return true;
-      if(trade.value.acceptor?.keycloakUUID && trade.value.acceptor?.keycloakUUID == sub) return true;
+      if(trade.value.acceptor.keycloakUUID && trade.value.acceptor.keycloakUUID == sub) return true;
     } catch {
       return {name: 'my-trades'};
     }
