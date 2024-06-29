@@ -53,7 +53,7 @@
           <h2 class="text-3xl text-white font-bold">OFFER CREATOR HAS</h2>
           <h2 class="text-2xl text-white">{{ counterProposerCards }} ITEMS</h2>
         </div>
-        <div class="flex flex-wrap gap-6 justify-between mt-5">
+        <div class="flex flex-wrap gap-6 justify-items-start mt-5">
           <div class="flex gap-4" v-for="card in proposerCards" :key="card.id">
             <CardLorcanaComponent class="w-56" :card=card />
           </div>
@@ -64,7 +64,7 @@
             <h2 class="text-3xl text-white font-bold">LOOKING FOR</h2>
             <h2 class="text-2xl text-white">{{ counterAcceptorCards }} ITEMS</h2>
           </div>
-          <div class="flex flex-wrap gap-6 justify-between mt-5">
+          <div class="flex flex-wrap gap-6 justify-items-start mt-5">
             <div class="flex gap-4" v-for="card in acceptorCards" :key="card.id">
               <CardLorcanaComponent class="w-56" :card=card />
             </div>
