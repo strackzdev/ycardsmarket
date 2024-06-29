@@ -25,7 +25,6 @@
          v-for="card in cards"
          :key="card.title"
          @click="navigate(card.title, card.disabled)"
-         :class="[card.disabled ? '' : 'disabled']"
     >
       <overall-cards
           :title="card.title"

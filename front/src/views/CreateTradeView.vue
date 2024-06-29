@@ -20,7 +20,7 @@
                   Offer
                 </button>
                 <button class="flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToOffer(card)">
-                  Loocking for
+                  Looking for
                 </button>
               </div>
             </div>

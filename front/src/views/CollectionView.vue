@@ -1,6 +1,6 @@
 <template>
   <div class="md:px-8 lg:px-24 py-8 mt-20">
-    <h1 class="mb-10 navy-blue font-bold text-center md:text-left text-xl md:text-5xl">OVERALL CARDS - GAME NAME</h1>
+    <h1 class="mb-10 navy-blue font-bold text-center md:text-left text-xl md:text-5xl">OVERALL CARDS - {{ gameValue }}</h1>
 
     <SearchBarComponent class="mb-5 px-2 md:px-0" @search="getSearchValue" />
     <div class="flex flex-col md:flex-row">

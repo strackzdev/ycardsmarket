@@ -1,6 +1,8 @@
 <template>
-  <div class="text-green-700 text-xl">DECKS</div>
-  {{ cardgames }}
+  <div class="pt-8 mt-20">
+    <h1 class="md:px-8 lg:px-24 mb-10 navy-blue font-bold text-center md:text-left text-xl md:text-5xl uppercase">Decks</h1>
+    <h2 class="uppercase text-center">Feature under development</h2>
+  </div>
 </template>
 
 <script setup lang="ts">
