@@ -32,7 +32,7 @@
         <h2 class="uppercase text-2xl font-bold mt-4">Your cards</h2>
         <div class="flex flex-col gap-2 my-4 max-h-48 overflow-y-auto">
           <div v-for="item in lookingForCards" :key="item.card.id" class="flex justify-between items-center relative rounded-t-lg overflow-clip">
-            <div class="absolute w-full h-full opacity-80 bg-gradient-to-r from-purple-900 to-pink-800" />
+            <div class="absolute w-full h-full opacity-80" :class="dynamicGradient(JSON.parse(item.card.attributes).Color)" />
             <div class="flex gap-2 items-center">
               <img class="min-w-20 h-12 object-top object-cover" :src="item.card.imageUrl" alt="" />
               <span class="-ml-12 text-white relative">{{ item.card.name }}</span>
@@ -51,7 +51,7 @@
         <h2 class="uppercase text-2xl font-bold mt-4">Looking for</h2>
         <div class="flex flex-col gap-2 my-4 max-h-48 overflow-y-auto">
           <div v-for="item in offerCards" :key="item.card.id" class="flex justify-between items-center relative rounded-t-lg overflow-clip">
-            <div class="absolute w-full h-full opacity-80 bg-gradient-to-r from-purple-900 to-pink-800" />
+            <div class="absolute w-full h-full opacity-80" :class="dynamicGradient(JSON.parse(item.card.attributes).Color)" />
             <div class="flex gap-2 items-center">
               <img class="min-w-20 h-12 object-top object-cover" :src="item.card.imageUrl" alt="" />
               <span class="-ml-12 text-white relative">{{ item.card.name }}</span>
@@ -114,6 +114,7 @@ import { CardCommonPropertyEnum, GameLabelEnum } from '@/components/card/CardEnu
 import type { Page } from '@/types/page';
 import type { FilterOption } from '../components/utils/FilterDropdownComponent.vue';
 import { useRouter } from 'vue-router'
+import { useConfirmModalStore } from '@/stores/confirmModalStore'
 
 const router = useRouter()
 
@@ -126,6 +127,10 @@ export type DeliveryMethod = {
   label: string,
   value: "IN_HANDS" | "LOCAL_STORE" | "MONDIAL_RELAY" | "TRACKED_LETTER"
 }
+
+const modalStore = useConfirmModalStore()
+
+const { open } = modalStore
 
 // Consts
 const pageSize = 20;
@@ -166,6 +171,10 @@ const filterType: Ref<string | undefined> = ref();
 const filterRarity: Ref<string | undefined> = ref();
 
 // Functions
+function dynamicGradient(color: string) {
+   return `bg-gradient-to-r from-${color.toLowerCase()} to-gray-400`
+}
+
 function incrementCardToLookingFor(card: Card) {
   if (lookingForCards.value.some(cardQuantity => cardQuantity.card.id === card.id)) {
     lookingForCards.value = lookingForCards.value.map(cardQuantity => {
@@ -210,53 +219,59 @@ function decrementCardFromOffer(card: Card) {
   }).filter(cardQuantity => cardQuantity.quantity > 0)
 }
 
+
 async function handleSubmit() {
   if (!selectedOption.value) return alert('Please select a delivery method')
   if (lookingForCards.value.length === 0) return alert('Please select at least one card you are looking for')
   if (offerCards.value.length === 0) return alert('Please select at least one card you are offering')
 
-  await axios.get(`${import.meta.env.VITE_BACKEND_PROXY}/card-games`)
-    .then((res) => {
-      const cardGame = res.data.find((game: any) => game.label === gameValue.value)
-      const trade = {
-        "financialGarantee": financialGuarantee.value,
-        "cardGame": {
-          "id": cardGame.id
-        },
-        "shipping": {
-          "method": selectedOption.value?.value,
-        },
-        "acceptorCards": lookingForCards.value.map(cardQuantity => {
-          return {
-            "card": {
-              "id": cardQuantity.card.id
-            },
-            "quantity": cardQuantity.quantity
-          }
-        }),
-        "proposerCards": offerCards.value.map(cardQuantity => {
-          return {
-            "card": {
-              "id": cardQuantity.card.id
-            },
-            "quantity": cardQuantity.quantity
-          }
-        })
-      }
-      axios.post(`${import.meta.env.VITE_BACKEND_PROXY}/trades`, trade)
+  open(
+    'Do you want to publish this trade ?',
+    async () => {
+      await axios.get(`${import.meta.env.VITE_BACKEND_PROXY}/card-games`)
         .then((res) => {
-          lookingForCards.value = []
-          offerCards.value = []
-          router.push({ name: 'trade', params: { id: res.data.id } })
+          const cardGame = res.data.find((game: any) => game.label === gameValue.value)
+          const trade = {
+            "financialGarantee": financialGuarantee.value,
+            "cardGame": {
+              "id": cardGame.id
+            },
+            "shipping": {
+              "method": selectedOption.value?.value,
+            },
+            "acceptorCards": lookingForCards.value.map(cardQuantity => {
+              return {
+                "card": {
+                  "id": cardQuantity.card.id
+                },
+                "quantity": cardQuantity.quantity
+              }
+            }),
+            "proposerCards": offerCards.value.map(cardQuantity => {
+              return {
+                "card": {
+                  "id": cardQuantity.card.id
+                },
+                "quantity": cardQuantity.quantity
+              }
+            })
+          }
+          axios.post(`${import.meta.env.VITE_BACKEND_PROXY}/trades`, trade)
+            .then((res) => {
+              lookingForCards.value = []
+              offerCards.value = []
+              router.push({ name: 'trade', params: { id: res.data.id } })
+            })
+            .catch(() => {
+              alert('An error occured')
+            })
+
         })
         .catch(() => {
           alert('An error occured')
         })
-
-    })
-    .catch(() => {
-      alert('An error occured')
-    })
+    }
+  )
 }
 
 async function getCards(pageSize: number, game: string, filters?: Filter[], pageIndex?: number, search?: string): Promise<AxiosResponse<Page<Card>, any>> {
