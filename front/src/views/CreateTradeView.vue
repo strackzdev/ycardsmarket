@@ -16,12 +16,28 @@
                 <CardLorcanaComponent class="w-56 customFlip" :card=card />
               </div>
               <div class="flip-card-back flex flex-col justify-center items-center gap-6">
-                <button class="flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToLookingFor(card)">
-                  Offer
-                </button>
-                <button class="flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToOffer(card)">
-                  Looking for
-                </button>
+                <div>
+                  <h2 class="text-xl font-bold text-center mb-4">Offering</h2>
+                  <div class="flex justify-center">
+                    <button class="flip-buttons me-2 uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToLookingFor(card, false)">
+                      Normal
+                    </button>
+                    <button class="flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToLookingFor(card, true)">
+                      Foil
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <h2 class="text-xl font-bold text-center mb-4">Looking for</h2>
+                  <div class="flex justify-center">
+                    <button class="me-2 flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToOffer(card, false)">
+                      Normal
+                    </button>
+                    <button class="flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToOffer(card, true)">
+                      Foil
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -120,7 +136,8 @@ const router = useRouter()
 
 type cardQuantity = {
   card: Card,
-  quantity: number
+  quantity: number,
+  foil: boolean
 }
 
 export type DeliveryMethod = {
@@ -175,7 +192,7 @@ function dynamicGradient(color: string) {
    return `bg-gradient-to-r from-${color.toLowerCase()} to-gray-400`
 }
 
-function incrementCardToLookingFor(card: Card) {
+function incrementCardToLookingFor(card: Card, foil: boolean) {
   if (lookingForCards.value.some(cardQuantity => cardQuantity.card.id === card.id)) {
     lookingForCards.value = lookingForCards.value.map(cardQuantity => {
       if (cardQuantity.card.id === card.id) {
@@ -185,7 +202,7 @@ function incrementCardToLookingFor(card: Card) {
     })
     return
   }
-  lookingForCards.value.push({ card, quantity: 1 })
+  lookingForCards.value.push({ card, quantity: 1, foil: foil })
 }
 
 function decrementCardFromLookingFor(card: Card) {
@@ -197,7 +214,7 @@ function decrementCardFromLookingFor(card: Card) {
   }).filter(cardQuantity => cardQuantity.quantity > 0)
 }
 
-function incrementCardToOffer(card: Card) {
+function incrementCardToOffer(card: Card, foil: boolean) {
   if (offerCards.value.some(cardQuantity => cardQuantity.card.id === card.id)) {
     offerCards.value = offerCards.value.map(cardQuantity => {
       if (cardQuantity.card.id === card.id) {
@@ -207,7 +224,7 @@ function incrementCardToOffer(card: Card) {
     })
     return
   }
-  offerCards.value.push({ card, quantity: 1 })
+  offerCards.value.push({ card, quantity: 1, foil: foil })
 }
 
 function decrementCardFromOffer(card: Card) {
