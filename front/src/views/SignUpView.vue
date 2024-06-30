@@ -12,16 +12,16 @@
         <h1 class="text-xl font-bold leading-tight tracking-tight navy-blue md:text-2xl">Sign up to YCardsMarket</h1>
         <form class="space-y-4 md:space-y-6" @submit.prevent="signUpOnSubmit()">
           <div>
-            <label for="text" class="block mb-2 text-sm font-medium navy-blue after:content-['*'] after:text-red-500">Firstname</label>
-            <input v-model="signUpForm.firstName" type="text" class="bg-gray-50 border-gray-300 navy-blue sm:text-sm rounded-full focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="player@ycardmarket.com" required>
+            <label for="text" class="block mb-2 text-sm font-medium navy-blue after:content-['*'] after:text-red-500">First name</label>
+            <input v-model="signUpForm.firstName" type="text" class="bg-gray-50 border-gray-300 navy-blue sm:text-sm rounded-full focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="First name" required>
           </div>
           <div>
-            <label for="text" class="block mb-2 text-sm font-medium navy-blue after:content-['*'] after:text-red-500">Lastname</label>
-            <input v-model="signUpForm.lastName" type="text" class="bg-gray-50 border-gray-300 navy-blue sm:text-sm rounded-full focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="player@ycardmarket.com" required>
+            <label for="text" class="block mb-2 text-sm font-medium navy-blue after:content-['*'] after:text-red-500">Last name</label>
+            <input v-model="signUpForm.lastName" type="text" class="bg-gray-50 border-gray-300 navy-blue sm:text-sm rounded-full focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Last name" required>
           </div>
           <div>
             <label for="text" class="block mb-2 text-sm font-medium navy-blue ">Username</label>
-            <input v-model="signUpForm.username" type="text" class="bg-gray-50 border-gray-300 navy-blue sm:text-sm rounded-full focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="player@ycardmarket.com" required>
+            <input v-model="signUpForm.username" type="text" class="bg-gray-50 border-gray-300 navy-blue sm:text-sm rounded-full focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="User name" required>
           </div>
           <div>
             <label for="email" class="block mb-2 text-sm font-medium navy-blue after:content-['*'] after:text-red-500">Email</label>
@@ -38,7 +38,7 @@
           <button type="submit" class="py-2 w-full rounded-full navy-blue-bg text-white">Sign in</button>
  
           <p class="text-sm font-light barbel-blue">
-            Don’t have an account yet? <router-link :to="{ name: 'signup'}" class="font-bold navy-blue hover:underline">Sign up</router-link>
+            You already have an account? <router-link :to="{ name: 'login'}" class="font-bold navy-blue hover:underline">Log in</router-link>
           </p>
         </form>
       </div>
@@ -73,5 +73,7 @@ const toastIsVisible = ref<boolean>(false);
 const toastContent = ref<string>('');
 
 // Functions
-function signUpOnSubmit() {}
+function signUpOnSubmit() {
+  
+}
 </script>
