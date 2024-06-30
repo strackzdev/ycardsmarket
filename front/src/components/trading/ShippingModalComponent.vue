@@ -41,7 +41,14 @@
 
                 </div>
                 <div class="flex justify-center mt-10">
-                <button class="bg-[#1A1E3E] hover:bg-[#3B4487] text-white font-bold py-2 px-4 w-72 rounded-full" @click="openShippingUpdateContent">
+                <button
+                    class="text-white font-bold py-2 px-4 w-72 rounded-full"
+                    @click="openShippingUpdateContent"
+                    :disabled="!isTradeWaitingForAcceptance()"
+                    :class="[
+                      !isTradeWaitingForAcceptance() ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#1A1E3E] hover:bg-[#3B4487]'
+                    ]"
+                >
                     Update shipping status
                 </button>
             </div>
@@ -71,7 +78,14 @@
             </div>
 
             <div class="flex justify-center mt-10">
-                <button class="bg-[#1A1E3E] hover:bg-[#3B4487] text-white font-bold py-2 px-4 w-72 rounded-full" @click="updateShippingInfo()">
+                <button
+                    class="text-white font-bold py-2 px-4 w-72 rounded-full"
+                    @click="updateShippingInfo()"
+                    :disabled="!isTradeWaitingForAcceptance()"
+                    :class="[
+                      !isTradeWaitingForAcceptance() ? 'opacity-50 cursor-not-allowed' : 'bg-[#1A1E3E] hover:bg-[#3B4487]'
+                    ]"
+                >
                     Update shipping status
                 </button>
             </div>
@@ -141,8 +155,12 @@ function openShippingUpdateContent(): void {
 
 function shippingInformationLabel(): string {
   const baseLabel = "Trade Information's";
-  const tradeStatus = trade.value.acceptor?.keycloakUUID ? "Accepted" : "Waiting for Acceptance";
+  const tradeStatus = isTradeWaitingForAcceptance() ? "Accepted" : "Waiting for Acceptance";
   return `${baseLabel} (${tradeStatus})`;
+}
+
+function isTradeWaitingForAcceptance(): boolean {
+  return !!(trade.value.acceptor?.keycloakUUID);
 }
 
 </script>

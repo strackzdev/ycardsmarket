@@ -86,7 +86,14 @@
             <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full" @click="openModal('info')">
               TRADE INFO
             </button>
-            <button class="text-[#1A1E3E] bg-white hover:bg-[#c7cee6] font-bold py-2 px-4 w-full rounded-full" @click="openModal('update')">
+            <button
+                class="bg-white text-[#1A1E3E] font-bold py-2 px-4 w-full rounded-full"
+                @click="openModal('update')"
+                :disabled="!isTradeWaitingForAcceptance()"
+                :class="[
+                      !isTradeWaitingForAcceptance() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#c7cee6]'
+                ]"
+            >
               SHIPPING UPDATE
             </button>
           </template>
@@ -211,6 +218,10 @@ async function executeAction(option: string | undefined): Promise<void> {
     )
   }
   selectOpen.value = false;
+}
+
+function isTradeWaitingForAcceptance(): boolean {
+  return !!(trade.value.acceptor?.keycloakUUID);
 }
 
 </script>
