@@ -122,6 +122,7 @@ import { useTradeStore } from '@/stores/trade';
 import type { Card } from '@/components/card/CardInterface';
 import { getAccessToken, decodeToken } from '@/auth/token';
 import {useConfirmModalStore} from "@/stores/confirmModalStore";
+import { useToastStore } from '@/stores/toast'
 
 // Constants
 const route = useRoute()
@@ -149,6 +150,9 @@ const { onToggle } = modalStore;
 const { modalContent } = storeToRefs(modalStore);
 const tradeStore = useTradeStore();
 const { trade } = storeToRefs(tradeStore);
+
+const toastStore = useToastStore()
+const { addToast } = toastStore
 
 // Hooks
 onMounted(async () => {
@@ -194,9 +198,10 @@ async function acceptOffer(): Promise<void> {
       .then((res) => {
           trade.value = res.data;
           isAccepted.value = trade.value.acceptor ? true : false;
+          addToast({message: 'Trade accepted', type: 'success'})
       })
       .catch(() => {
-        alert('An error occured')
+        addToast({message: 'An error occured', type: 'error'})
       });
     }
   )
@@ -210,9 +215,10 @@ async function executeAction(option: string | undefined): Promise<void> {
         await axios.delete(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${trade.value.id}`)
         .then(() => {
             router.push({name: 'my-trades'});
+            addToast({message: 'Trade deleted', type: 'success'})
         })
        .catch(() => {
-          alert('An error occured')
+          addToast({message: 'An error occured', type: 'error'})
         });
       }
     )

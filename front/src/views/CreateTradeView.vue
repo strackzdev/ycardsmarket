@@ -115,6 +115,7 @@ import type { Page } from '@/types/page';
 import type { FilterOption } from '../components/utils/FilterDropdownComponent.vue';
 import { useRouter } from 'vue-router'
 import { useConfirmModalStore } from '@/stores/confirmModalStore'
+import { useToastStore } from '@/stores/toast'
 
 const router = useRouter()
 
@@ -129,8 +130,10 @@ export type DeliveryMethod = {
 }
 
 const modalStore = useConfirmModalStore()
-
 const { open } = modalStore
+
+const toastStore = useToastStore()
+const { addToast } = toastStore
 
 // Consts
 const pageSize = 20;
@@ -221,9 +224,9 @@ function decrementCardFromOffer(card: Card) {
 
 
 async function handleSubmit() {
-  if (!selectedOption.value) return alert('Please select a delivery method')
-  if (lookingForCards.value.length === 0) return alert('Please select at least one card you are looking for')
-  if (offerCards.value.length === 0) return alert('Please select at least one card you are offering')
+  if (!selectedOption.value)return addToast({ message: 'Please select a delivery method', type: 'error' })
+  if (lookingForCards.value.length === 0) return addToast({ message: 'Please select at least one card you are looking for', type: 'error' })
+  if (offerCards.value.length === 0) return addToast({ message: 'Please select at least one card you are offering', type: 'error' })
 
   open(
     'Do you want to publish this trade ?',
@@ -260,15 +263,16 @@ async function handleSubmit() {
             .then((res) => {
               lookingForCards.value = []
               offerCards.value = []
+              addToast({ message: 'Trade published', type: 'success' })
               router.push({ name: 'trade', params: { id: res.data.id } })
             })
             .catch(() => {
-              alert('An error occured')
+              addToast({ message: 'An error occured', type: 'error' })
             })
 
         })
         .catch(() => {
-          alert('An error occured')
+          addToast({ message: 'An error occured', type: 'error' })
         })
     }
   )
