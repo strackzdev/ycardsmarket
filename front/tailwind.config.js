@@ -12,6 +12,12 @@ export default {
     'from-ruby',
     'from-sapphire',
     'from-steel',
+
+    'bg-success',
+    'bg-error',
+    'bg-info',
+    'bg-warning',
+
     ],
     theme: {
     extend: {
@@ -22,6 +28,11 @@ export default {
         'ruby': '#D43C31',
         'sapphire': '#0689C3',
         'steel': '#9FA9B3',
+
+        'success': '#22C55EFF',
+        'info': '#3B82F6FF',
+        'warning': '#EAB308FF',
+        'error': '#EF4444FF',
       },
       spacing: {
         '1/2-2': 'calc(50% - 0.5rem)',
