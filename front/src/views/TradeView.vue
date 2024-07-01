@@ -259,7 +259,7 @@ function isTradeWaitingForAcceptance(): boolean {
   mix-blend-mode: color-dodge;
   opacity: 0.2;
   z-index: 1;
-  /* animation: holoGradient 15s ease infinite; */
+  animation: holoGradient 5s ease infinite;
 }
 .card:after {
   background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/13471/sparkles.gif");
@@ -268,7 +268,7 @@ function isTradeWaitingForAcceptance(): boolean {
   mix-blend-mode: color-dodge;
   opacity: 1;
   z-index: 2;
-  /* animation: holoSparkle 20s ease infinite; */
+  animation: holoSparkle 10s ease infinite;
 }
 
 .card.active:before {
