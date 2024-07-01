@@ -49,29 +49,6 @@
 
     <div class="flex justify-between min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8 relative">
       <main class="mt-10 w-3/5">
-
-
-
-
-
-
-        <h1>Pokemon Card Effect</h1>
-
-        <div class="card">
-        </div>
-        <span class="operator">+</span>
-        <div class="card">
-          <span>+ color-dodge</span>
-        </div>
-        <!-- <span class="operator">+</span>
-        <div class="card">
-          <span>+ color-dodge</span>
-        </div>
-        <span class="operator">=</span>
-        <div class="card"></div> -->
-
-
-
         <div class="flex justify-between items-center">
           <h2 class="text-3xl text-white font-bold">OFFER CREATOR HAS</h2>
           <h2 class="text-2xl text-white">{{ counterProposerCards }} ITEMS</h2>
@@ -144,7 +121,6 @@ import { useModalStore } from '@/stores/modal';
 import ShippingModalComponent from '@/components/trading/ShippingModalComponent.vue';
 import { storeToRefs } from 'pinia';
 import { useTradeStore } from '@/stores/trade';
-import type { Card } from '@/components/card/CardInterface';
 import { getAccessToken, decodeToken } from '@/auth/token';
 import {useConfirmModalStore} from "@/stores/confirmModalStore";
 
