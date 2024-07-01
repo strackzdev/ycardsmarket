@@ -36,6 +36,29 @@ function dynamicGradient(color: string) {
   overflow: hidden;
 }
 
+.customCss::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/13471/sparkles.gif");
+  background-position: center;
+  background-size: 180%;
+  mix-blend-mode: color-dodge;
+  opacity: 0.4;
+  z-index: 2;
+}
+
+@keyframes shine {
+  0%, 100% {
+    top: -50%;
+    left: -100%;
+  }
+  50% {
+    top: 50%;
+    left: 50%;
+  }
+}
 .customCss::before {
   content: '';
   position: absolute;

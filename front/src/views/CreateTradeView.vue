@@ -239,6 +239,7 @@ async function handleSubmit() {
                 "card": {
                   "id": cardQuantity.card.id
                 },
+                "foil": cardQuantity.foil,
                 "quantity": cardQuantity.quantity
               }
             }),
@@ -247,6 +248,7 @@ async function handleSubmit() {
                 "card": {
                   "id": cardQuantity.card.id
                 },
+                "foil": cardQuantity.foil,
                 "quantity": cardQuantity.quantity
               }
             })
