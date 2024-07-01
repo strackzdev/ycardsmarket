@@ -16,12 +16,28 @@
                 <CardLorcanaComponent class="w-56 customFlip" :card=card />
               </div>
               <div class="flip-card-back flex flex-col justify-center items-center gap-6">
-                <button class="flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToLookingFor(card)">
-                  Offer
-                </button>
-                <button class="flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToOffer(card)">
-                  Looking for
-                </button>
+                <div>
+                  <h2 class="text-xl font-bold text-center mb-4">Offering</h2>
+                  <div class="flex justify-center">
+                    <button class="flip-buttons me-2 uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToLookingFor(card, false)">
+                      Normal
+                    </button>
+                    <button class="flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToLookingFor(card, true)">
+                      Foil
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <h2 class="text-xl font-bold text-center mb-4">Looking for</h2>
+                  <div class="flex justify-center">
+                    <button class="me-2 flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToOffer(card, false)">
+                      Normal
+                    </button>
+                    <button class="flip-buttons uppercase navy-blue-bg barbel-blue-bg-darker-hover text-white font-bold py-2 px-4 w-fit rounded" @click="incrementCardToOffer(card, true)">
+                      Foil
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -31,41 +47,17 @@
       <aside class="w-96 bg-white rounded-xl h-fit px-6 py-4 sticky top-8">
         <h2 class="uppercase text-2xl font-bold mt-4">Your cards</h2>
         <div class="flex flex-col gap-2 my-4 max-h-48 overflow-y-auto">
-          <div v-for="item in lookingForCards" :key="item.card.id" class="flex justify-between items-center relative rounded-t-lg overflow-clip">
-            <div class="absolute w-full h-full opacity-80" :class="dynamicGradient(JSON.parse(item.card.attributes).Color)" />
-            <div class="flex gap-2 items-center">
-              <img class="min-w-20 h-12 object-top object-cover" :src="item.card.imageUrl" alt="" />
-              <span class="-ml-12 text-white relative">{{ item.card.name }}</span>
-            </div>
-            <div class="flex gap-2 relative text-white mr-2">
-              <span class="cursor-pointer rounded-full border-2 font-bold uppercase border-white flex justify-center items-center w-6 h-6" @click="incrementCardToLookingFor(item.card)">
-                +
-              </span>
-              {{ item.quantity}}
-              <span class="cursor-pointer rounded-full border-2 font-bold uppercase border-white flex justify-center items-center w-6 h-6" @click="decrementCardFromLookingFor(item.card)">
-                -
-              </span>
-            </div>
-          </div>
+          <InlineCard v-for="item in lookingForCards" :key="item.card.id"
+                      :item="item"
+                      :increment-card="() => incrementCardToLookingFor(item.card, item.foil)"
+                      :decrement-card="() => decrementCardFromLookingFor(item.card, item.foil)" />
         </div>
         <h2 class="uppercase text-2xl font-bold mt-4">Looking for</h2>
         <div class="flex flex-col gap-2 my-4 max-h-48 overflow-y-auto">
-          <div v-for="item in offerCards" :key="item.card.id" class="flex justify-between items-center relative rounded-t-lg overflow-clip">
-            <div class="absolute w-full h-full opacity-80" :class="dynamicGradient(JSON.parse(item.card.attributes).Color)" />
-            <div class="flex gap-2 items-center">
-              <img class="min-w-20 h-12 object-top object-cover" :src="item.card.imageUrl" alt="" />
-              <span class="-ml-12 text-white relative">{{ item.card.name }}</span>
-            </div>
-            <div class="flex gap-2 relative text-white mr-2">
-              <span class="cursor-pointer rounded-full border-2 font-bold uppercase border-white flex justify-center items-center w-6 h-6" @click="incrementCardToOffer(item.card)">
-                +
-              </span>
-              {{ item.quantity}}
-              <span class="cursor-pointer rounded-full border-2 font-bold uppercase border-white flex justify-center items-center w-6 h-6" @click="decrementCardFromOffer(item.card)">
-                -
-              </span>
-            </div>
-          </div>
+          <InlineCard v-for="item in offerCards" :key="item.card.id"
+                      :item="item"
+                      :increment-card="() => incrementCardToOffer(item.card, item.foil)"
+                      :decrement-card="() => decrementCardFromOffer(item.card, item.foil)" />
         </div>
         <h2 class="uppercase text-2xl font-bold mt-4">method</h2>
         <div class="flex flex-col gap-2 my-4">
@@ -115,12 +107,14 @@ import type { Page } from '@/types/page';
 import type { FilterOption } from '../components/utils/FilterDropdownComponent.vue';
 import { useRouter } from 'vue-router'
 import { useConfirmModalStore } from '@/stores/confirmModalStore'
+import InlineCard from '@/components/card/InlineCard.vue'
 
 const router = useRouter()
 
 type cardQuantity = {
   card: Card,
-  quantity: number
+  quantity: number,
+  foil: boolean
 }
 
 export type DeliveryMethod = {
@@ -175,44 +169,45 @@ function dynamicGradient(color: string) {
    return `bg-gradient-to-r from-${color.toLowerCase()} to-gray-400`
 }
 
-function incrementCardToLookingFor(card: Card) {
-  if (lookingForCards.value.some(cardQuantity => cardQuantity.card.id === card.id)) {
+function incrementCardToLookingFor(card: Card, foil: boolean) {
+  if (lookingForCards.value.some(cardQuantity => cardQuantity.card.id === card.id && cardQuantity.foil === foil)) {
     lookingForCards.value = lookingForCards.value.map(cardQuantity => {
-      if (cardQuantity.card.id === card.id) {
+      if (cardQuantity.card.id === card.id && cardQuantity.foil === foil) {
         cardQuantity.quantity++
       }
       return cardQuantity
     })
     return
   }
-  lookingForCards.value.push({ card, quantity: 1 })
+  lookingForCards.value.push({ card, quantity: 1, foil: foil })
 }
 
-function decrementCardFromLookingFor(card: Card) {
+function decrementCardFromLookingFor(card: Card, foil: boolean) {
   lookingForCards.value = lookingForCards.value.map(cardQuantity => {
-    if (cardQuantity.card.id === card.id) {
+    if (cardQuantity.card.id === card.id && cardQuantity.foil === foil) {
       cardQuantity.quantity--
     }
     return cardQuantity
   }).filter(cardQuantity => cardQuantity.quantity > 0)
 }
 
-function incrementCardToOffer(card: Card) {
-  if (offerCards.value.some(cardQuantity => cardQuantity.card.id === card.id)) {
+function incrementCardToOffer(card: Card, foil: boolean) {
+  console.log(offerCards.value.some(cardQuantity => cardQuantity.card.id === card.id))
+  if (offerCards.value.some(cardQuantity => cardQuantity.card.id === card.id && cardQuantity.foil === foil)) {
     offerCards.value = offerCards.value.map(cardQuantity => {
-      if (cardQuantity.card.id === card.id) {
+      if (cardQuantity.card.id === card.id && cardQuantity.foil === foil) {
         cardQuantity.quantity++
       }
       return cardQuantity
     })
     return
   }
-  offerCards.value.push({ card, quantity: 1 })
+  offerCards.value.push({ card, quantity: 1, foil: foil })
 }
 
-function decrementCardFromOffer(card: Card) {
+function decrementCardFromOffer(card: Card, foil: boolean) {
   offerCards.value = offerCards.value.map(cardQuantity => {
-    if (cardQuantity.card.id === card.id) {
+    if (cardQuantity.card.id === card.id && cardQuantity.foil === foil) {
       cardQuantity.quantity--
     }
     return cardQuantity
@@ -244,6 +239,7 @@ async function handleSubmit() {
                 "card": {
                   "id": cardQuantity.card.id
                 },
+                "foil": cardQuantity.foil,
                 "quantity": cardQuantity.quantity
               }
             }),
@@ -252,6 +248,7 @@ async function handleSubmit() {
                 "card": {
                   "id": cardQuantity.card.id
                 },
+                "foil": cardQuantity.foil,
                 "quantity": cardQuantity.quantity
               }
             })

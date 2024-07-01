@@ -55,7 +55,8 @@
         </div>
         <div class="flex flex-wrap gap-6 justify-items-start mt-5">
           <div class="flex gap-4" v-for="card in proposerCards" :key="card.id">
-            <CardLorcanaComponent class="w-56" :card=card />
+            <CardLorcanaComponent v-if="card.foil" class="w-56 card" :card=card.card />
+            <CardLorcanaComponent v-else class="w-56" :card=card.card />
           </div>
         </div>
 
@@ -66,7 +67,8 @@
           </div>
           <div class="flex flex-wrap gap-6 justify-items-start mt-5">
             <div class="flex gap-4" v-for="card in acceptorCards" :key="card.id">
-              <CardLorcanaComponent class="w-56" :card=card />
+              <CardLorcanaComponent v-if="card.foil" class="w-56 card" :card=card.card />
+              <CardLorcanaComponent v-else class="w-56" :card=card.card />
             </div>
           </div>
         </div>
@@ -119,7 +121,6 @@ import { useModalStore } from '@/stores/modal';
 import ShippingModalComponent from '@/components/trading/ShippingModalComponent.vue';
 import { storeToRefs } from 'pinia';
 import { useTradeStore } from '@/stores/trade';
-import type { Card } from '@/components/card/CardInterface';
 import { getAccessToken, decodeToken } from '@/auth/token';
 import {useConfirmModalStore} from "@/stores/confirmModalStore";
 
@@ -127,8 +128,8 @@ import {useConfirmModalStore} from "@/stores/confirmModalStore";
 const route = useRoute()
 
 // Refs
-const proposerCards = ref<Card[]>([]);
-const acceptorCards = ref<Card[]>([]);
+const proposerCards = ref<TradeCard[]>([]);
+const acceptorCards = ref<TradeCard[]>([]);
 const counterProposerCards = ref<number>(0);
 const counterAcceptorCards = ref<number>(0);
 const isProposer = ref<boolean>(false);
@@ -168,12 +169,12 @@ async function getTradeInfo(): Promise<AxiosResponse<Trade, any>> {
   return await axios.get<Trade>(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${id.value}`);
 }
 
-function getCards(tradeCards: TradeCard[], cards: Card[]): number {
+function getCards(tradeCards: TradeCard[], cards: TradeCard[]): number {
   let counter = 0;
 
   tradeCards.forEach((tradeCard: TradeCard) => {
     for (let i=0; i<tradeCard.quantity; i++) {
-      cards.push(tradeCard.card);
+      cards.push(tradeCard);
       counter++;
     }
   })
@@ -227,5 +228,111 @@ function isTradeWaitingForAcceptance(): boolean {
 </script>
 
 <style scoped>
+.card {
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+}
 
+.card:before,
+.card:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-image: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgb(0, 231, 255) 30%,
+    rgb(255, 0, 231) 70%,
+    transparent 100%
+  );
+  border-radius: 1rem;
+  background-position: 0% 0%;
+  background-repeat: no-repeat;
+  background-size: 300% 300%;
+  mix-blend-mode: color-dodge;
+  opacity: 0.2;
+  z-index: 1;
+  animation: holoGradient 5s ease infinite;
+}
+.card:after {
+  background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/13471/sparkles.gif");
+  background-position: center;
+  background-size: 180%;
+  mix-blend-mode: color-dodge;
+  opacity: 1;
+  z-index: 2;
+  animation: holoSparkle 10s ease infinite;
+}
+
+.card.active:before {
+  opacity: 1;
+  animation: none;
+  transition: none;
+  background-image: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 25%,
+    rgba(0, 231, 255,0.7) 45%,
+    rgba(255, 0, 231,0.7) 55%,
+    transparent 70%,
+    transparent 100%
+  );
+}
+
+
+.operator {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 45px;
+}
+@keyframes holoSparkle {
+  0% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.5;
+  }
+  95% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes holoGradient {
+  3% {
+    opacity: 0;
+  }
+  5% {
+    background-position: 0% 0%;
+  }
+  7% {
+    opacity: 0.5;
+  }
+  9% {
+    background-position: 100% 100%;
+  }
+  11% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+    background-position: 100% 100%;
+  }
+  55% {
+    opacity: 0.3;
+  }
+  70% {
+    opacity: 0;
+    background-position: 0% 0%;
+  }
+}
 </style>
