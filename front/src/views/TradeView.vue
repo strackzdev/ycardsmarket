@@ -49,6 +49,29 @@
 
     <div class="flex justify-between min-h-screen navy-blue-bg md:px-8 lg:px-24 py-8 relative">
       <main class="mt-10 w-3/5">
+
+
+
+
+
+
+        <h1>Pokemon Card Effect</h1>
+
+        <div class="card">
+        </div>
+        <span class="operator">+</span>
+        <div class="card">
+          <span>+ color-dodge</span>
+        </div>
+        <!-- <span class="operator">+</span>
+        <div class="card">
+          <span>+ color-dodge</span>
+        </div>
+        <span class="operator">=</span>
+        <div class="card"></div> -->
+
+
+
         <div class="flex justify-between items-center">
           <h2 class="text-3xl text-white font-bold">OFFER CREATOR HAS</h2>
           <h2 class="text-2xl text-white">{{ counterProposerCards }} ITEMS</h2>
@@ -227,5 +250,112 @@ function isTradeWaitingForAcceptance(): boolean {
 </script>
 
 <style scoped>
+.card {
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 20px 10px;
+}
 
+.card:before,
+.card:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-image: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgb(0, 231, 255) 30%,
+    rgb(255, 0, 231) 70%,
+    transparent 100%
+  );
+  border-radius: 1rem;
+  background-position: 0% 0%;
+  background-repeat: no-repeat;
+  background-size: 300% 300%;
+  mix-blend-mode: color-dodge;
+  opacity: 0.2;
+  z-index: 1;
+  /* animation: holoGradient 15s ease infinite; */
+}
+.card:after {
+  background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/13471/sparkles.gif");
+  background-position: center;
+  background-size: 180%;
+  mix-blend-mode: color-dodge;
+  opacity: 1;
+  z-index: 2;
+  /* animation: holoSparkle 20s ease infinite; */
+}
+
+.card.active:before {
+  opacity: 1;
+  animation: none;
+  transition: none;
+  background-image: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 25%,
+    rgba(0, 231, 255,0.7) 45%,
+    rgba(255, 0, 231,0.7) 55%,
+    transparent 70%,
+    transparent 100%
+  );
+}
+
+
+.operator {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 45px;
+}
+@keyframes holoSparkle {
+  0% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.5;
+  }
+  95% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes holoGradient {
+  3% {
+    opacity: 0;
+  }
+  5% {
+    background-position: 0% 0%;
+  }
+  7% {
+    opacity: 0.5;
+  }
+  9% {
+    background-position: 100% 100%;
+  }
+  11% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+    background-position: 100% 100%;
+  }
+  55% {
+    opacity: 0.3;
+  }
+  70% {
+    opacity: 0;
+    background-position: 0% 0%;
+  }
+}
 </style>

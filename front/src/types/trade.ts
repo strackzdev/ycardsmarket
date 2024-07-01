@@ -14,7 +14,8 @@ interface TradeUserInfo extends BaseEntity{
 export interface TradeCard {
     "id": string,
     "card": Card,
-    "quantity": number
+    "quantity": number,
+    "foil": boolean
 }
 
 interface TradeShipping extends BaseEntity {
