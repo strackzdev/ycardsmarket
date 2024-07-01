@@ -20,11 +20,11 @@ function dynamicGradient(color: string) {
       <span class="-ml-12 text-white relative">{{ item.card.name }}</span>
     </div>
     <div class="flex gap-2 relative text-white mr-2">
-              <span class="cursor-pointer rounded-full border-2 font-bold uppercase border-white flex justify-center items-center w-6 h-6" @click="() => incrementCard">
+              <span class="cursor-pointer rounded-full border-2 font-bold uppercase border-white flex justify-center items-center w-6 h-6" @click="incrementCard">
                 +
               </span>
       {{ item.quantity}}
-      <span class="cursor-pointer rounded-full border-2 font-bold uppercase border-white flex justify-center items-center w-6 h-6" @click="() => decrementCard">
+      <span class="cursor-pointer rounded-full border-2 font-bold uppercase border-white flex justify-center items-center w-6 h-6" @click="decrementCard">
                 -
               </span>
     </div>
