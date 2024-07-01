@@ -78,7 +78,8 @@
         </div>
         <div class="flex flex-wrap gap-6 justify-items-start mt-5">
           <div class="flex gap-4" v-for="card in proposerCards" :key="card.id">
-            <CardLorcanaComponent class="w-56" :card=card />
+            <CardLorcanaComponent v-if="card.foil" class="w-56 card" :card=card.card />
+            <CardLorcanaComponent v-else class="w-56" :card=card.card />
           </div>
         </div>
 
@@ -89,7 +90,8 @@
           </div>
           <div class="flex flex-wrap gap-6 justify-items-start mt-5">
             <div class="flex gap-4" v-for="card in acceptorCards" :key="card.id">
-              <CardLorcanaComponent class="w-56" :card=card />
+              <CardLorcanaComponent v-if="card.foil" class="w-56 card" :card=card.card />
+              <CardLorcanaComponent v-else class="w-56" :card=card.card />
             </div>
           </div>
         </div>
@@ -150,8 +152,8 @@ import {useConfirmModalStore} from "@/stores/confirmModalStore";
 const route = useRoute()
 
 // Refs
-const proposerCards = ref<Card[]>([]);
-const acceptorCards = ref<Card[]>([]);
+const proposerCards = ref<TradeCard[]>([]);
+const acceptorCards = ref<TradeCard[]>([]);
 const counterProposerCards = ref<number>(0);
 const counterAcceptorCards = ref<number>(0);
 const isProposer = ref<boolean>(false);
@@ -191,12 +193,12 @@ async function getTradeInfo(): Promise<AxiosResponse<Trade, any>> {
   return await axios.get<Trade>(`${import.meta.env.VITE_BACKEND_PROXY}/trades/${id.value}`);
 }
 
-function getCards(tradeCards: TradeCard[], cards: Card[]): number {
+function getCards(tradeCards: TradeCard[], cards: TradeCard[]): number {
   let counter = 0;
 
   tradeCards.forEach((tradeCard: TradeCard) => {
     for (let i=0; i<tradeCard.quantity; i++) {
-      cards.push(tradeCard.card);
+      cards.push(tradeCard);
       counter++;
     }
   })
@@ -257,7 +259,6 @@ function isTradeWaitingForAcceptance(): boolean {
   overflow: hidden;
   display: inline-block;
   vertical-align: middle;
-  margin: 20px 10px;
 }
 
 .card:before,
